@@ -1,10 +1,51 @@
 @import "tailwindcss";
 
+@theme {
+  --color-gold:       #d4af37;
+  --color-gold-light: #f5d76e;
+  --color-gold-dark:  #b8962e;
+  --color-dark:       #0a0a0a;
+  --color-dark-card:  #111111;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
   overscroll-behavior: none;
-  background-color: #fff0f5;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
+
+/* Date/time inputs dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7) sepia(0.3) saturate(3) hue-rotate(15deg);
+  cursor: pointer;
+}
+
+input[type="date"],
+input[type="time"] {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #d4af37; }

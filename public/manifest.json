@@ -1,11 +1,11 @@
 {
-  "name": "Toppifresa",
-  "short_name": "Toppifresa",
-  "description": "Las mejores fresas con crema en Acambaro, Guanajuato",
+  "name": "Nail Studio Dashboard",
+  "short_name": "Nail Studio",
+  "description": "Panel de control profesional para estudio de uñas",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fff0f5",
-  "theme_color": "#e91e63",
+  "background_color": "#0a0a0a",
+  "theme_color": "#d4af37",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
