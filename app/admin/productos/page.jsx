@@ -2,10 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  Plus, Pencil, Trash2, X, Check, Image as ImageIcon,
-  GripVertical, ChevronDown, ChevronUp,
-} from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Check, Image as ImageIcon } from 'lucide-react'
 import { products as staticProducts } from '@/lib/data/products'
 
 const TAGS = ['Clásico', 'Favorito', 'Especial', 'Premium', 'Mexicano', 'Picante', 'Nuevo']
@@ -17,37 +14,10 @@ const EMPTY_FORM = {
   colors: { from: '#E8194A', to: '#B02952', text: '#ffffff' },
   popular: false, isNew: false,
   toppings: [],
-  sizes: [{ name: 'Regular', price: '' }],
+  price: '',
   imageUrl: '',
 }
 
-function SizeRow({ size, onChange, onRemove, canRemove }) {
-  return (
-    <div className="flex items-center gap-2">
-      <input
-        value={size.name}
-        onChange={(e) => onChange({ ...size, name: e.target.value })}
-        placeholder="Nombre (Chico, Regular…)"
-        className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-primary"
-      />
-      <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
-        <input
-          type="number"
-          value={size.price}
-          onChange={(e) => onChange({ ...size, price: Number(e.target.value) })}
-          placeholder="Precio"
-          className="w-24 pl-7 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-primary"
-        />
-      </div>
-      {canRemove && (
-        <button onClick={onRemove} className="w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-600">
-          <X size={16} />
-        </button>
-      )}
-    </div>
-  )
-}
 
 function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial || EMPTY_FORM)
@@ -66,14 +36,6 @@ function ProductForm({ initial, onSave, onCancel }) {
   }
 
   const removeTopping = (t) => set('toppings', form.toppings.filter((x) => x !== t))
-
-  const addSize = () => set('sizes', [...form.sizes, { name: '', price: '' }])
-  const updateSize = (i, val) => {
-    const s = [...form.sizes]
-    s[i] = val
-    set('sizes', s)
-  }
-  const removeSize = (i) => set('sizes', form.sizes.filter((_, idx) => idx !== i))
 
   const handleSave = async () => {
     if (!form.name.trim()) return
@@ -235,25 +197,18 @@ function ProductForm({ initial, onSave, onCancel }) {
           </div>
         </div>
 
-        {/* Sizes */}
+        {/* Price */}
         <div>
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">Tamaños y precios</label>
-          <div className="flex flex-col gap-2">
-            {form.sizes.map((s, i) => (
-              <SizeRow
-                key={i}
-                size={s}
-                onChange={(val) => updateSize(i, val)}
-                onRemove={() => removeSize(i)}
-                canRemove={form.sizes.length > 1}
-              />
-            ))}
-            <button
-              onClick={addSize}
-              className="flex items-center gap-1.5 text-primary text-sm font-semibold py-1"
-            >
-              <Plus size={15} /> Agregar tamaño
-            </button>
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">Precio</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+            <input
+              type="number"
+              value={form.price}
+              onChange={(e) => set('price', Number(e.target.value))}
+              placeholder="65"
+              className="w-full pl-7 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-primary"
+            />
           </div>
         </div>
 
@@ -338,7 +293,7 @@ function ProductItem({ product, onEdit, onDelete }) {
           {product.popular && <span className="text-amber-300 text-xs">🔥</span>}
           {product.isNew && <span className="text-emerald-300 text-xs">✨</span>}
           <p className="text-white font-black text-sm">
-            ${product.sizes[product.sizes.length > 1 ? 1 : 0]?.price}
+            ${product.price}
           </p>
         </div>
       </div>
