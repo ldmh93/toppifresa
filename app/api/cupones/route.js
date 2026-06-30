@@ -1,7 +1,17 @@
 import { NextResponse } from 'next/server'
-import { adminDb } from '@/lib/firebase/admin'
+
+function getAdminDb() {
+  // Lazy import so build doesn't fail without Firebase credentials
+  const { adminDb } = require('@/lib/firebase/admin')
+  return adminDb
+}
 
 export async function POST(request) {
+  const adminDb = getAdminDb()
+  if (!adminDb) {
+    return NextResponse.json({ message: 'Firebase no configurado.' }, { status: 503 })
+  }
+
   try {
     const body = await request.json()
     const { nombre, telefono } = body
@@ -20,7 +30,6 @@ export async function POST(request) {
       )
     }
 
-    // Check for duplicate phone
     const existing = await adminDb
       .collection('cupones')
       .where('telefono', '==', telefono.trim())
@@ -41,21 +50,19 @@ export async function POST(request) {
       ip: request.headers.get('x-forwarded-for') || 'unknown',
     })
 
-    return NextResponse.json(
-      { success: true, id: docRef.id },
-      { status: 201 },
-    )
+    return NextResponse.json({ success: true, id: docRef.id }, { status: 201 })
   } catch (error) {
     console.error('[POST /api/cupones]', error)
-    return NextResponse.json(
-      { message: 'Error interno del servidor.' },
-      { status: 500 },
-    )
+    return NextResponse.json({ message: 'Error interno del servidor.' }, { status: 500 })
   }
 }
 
 export async function GET(request) {
-  // Simple admin key check — replace with proper auth in production
+  const adminDb = getAdminDb()
+  if (!adminDb) {
+    return NextResponse.json({ message: 'Firebase no configurado.' }, { status: 503 })
+  }
+
   const { searchParams } = new URL(request.url)
   const key = searchParams.get('key')
 
@@ -69,17 +76,10 @@ export async function GET(request) {
       .orderBy('createdAt', 'desc')
       .get()
 
-    const cupones = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-
+    const cupones = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
     return NextResponse.json({ cupones })
   } catch (error) {
     console.error('[GET /api/cupones]', error)
-    return NextResponse.json(
-      { message: 'Error interno del servidor.' },
-      { status: 500 },
-    )
+    return NextResponse.json({ message: 'Error interno del servidor.' }, { status: 500 })
   }
 }
