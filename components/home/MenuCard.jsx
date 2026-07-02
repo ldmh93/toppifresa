@@ -56,7 +56,7 @@ export default function MenuCard({ product, index }) {
     >
       {/* Visual header */}
       <div
-        className="relative h-36 flex items-center justify-between px-5 overflow-hidden"
+        className="relative h-36 flex items-start justify-between px-5 pt-4 pb-9 overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${product.colors.from}, ${product.colors.to})` }}
       >
         {/* Decorative circles */}
