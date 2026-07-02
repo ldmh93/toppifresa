@@ -11,7 +11,7 @@ export default function HeroApp() {
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(145deg, #D63864 0%, #9B1C40 55%, #1C0A12 100%)',
+          background: 'linear-gradient(145deg, #b5191a 0%, #4b100d 60%, #150c09 100%)',
         }}
       />
 
@@ -48,9 +48,12 @@ export default function HeroApp() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-white/70 text-sm font-medium">📍 Acámbaro, Gto.</p>
-            <h1 className="text-white font-bold text-xl leading-tight">
-              Toppifresa 🍓
-            </h1>
+            <img
+              src="/logo-white.svg"
+              alt="Toppifresa"
+              className="h-10 mt-0.5 w-auto"
+              draggable={false}
+            />
           </div>
           <motion.button
             whileTap={{ scale: 0.9 }}
@@ -67,11 +70,12 @@ export default function HeroApp() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-6"
         >
-          <h2 className="text-white font-black text-3xl leading-tight mb-2">
+          <h2 className="text-white font-black text-3xl leading-tight mb-1">
             Fresas con Crema
             <br />
-            <span className="text-primary-200">que enamoran</span>
+            <span style={{ color: '#ff7bac' }}>que enamoran</span>
           </h2>
+          <p className="text-white/60 text-xs italic mb-1">Tu dosis de felicidad diaria ✨</p>
           <p className="text-white/70 text-sm">
             10 sabores únicos · Toppings premium · Pide por WhatsApp
           </p>

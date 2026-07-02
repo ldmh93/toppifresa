@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --primary: #D63864;
-  --primary-light: #FF6B8A;
-  --primary-dark: #B02952;
-  --bg: #FFF0F3;
+  --primary: #b5191a;
+  --primary-light: #e2787d;
+  --primary-dark: #9c0b0a;
+  --bg: #f9e4e5;
   --card: #ffffff;
-  --text: #1C1C1E;
+  --text: #150c09;
   --text-muted: #8E8E93;
-  --border: #F2E4E8;
+  --border: #e8c5c7;
   --bottom-nav-height: 80px;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -77,7 +77,7 @@ body {
 .card-base {
   background: white;
   border-radius: 20px;
-  box-shadow: 0 2px 20px rgba(214, 56, 100, 0.08);
+  box-shadow: 0 2px 20px rgba(181, 25, 26, 0.08);
   overflow: hidden;
 }
 
@@ -106,9 +106,9 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    #f0e8eb 25%,
-    #ffd6df 50%,
-    #f0e8eb 75%
+    #eedadb 25%,
+    #fec5cb 50%,
+    #eedadb 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
