@@ -4,12 +4,11 @@ import { motion } from 'framer-motion'
 import { MapPin, Clock, Phone, Navigation, Instagram, MessageCircle } from 'lucide-react'
 import { openWhatsApp, buildLocationMessage } from '@/lib/utils/whatsapp'
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524611234567'
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524439425620'
 
 const schedule = [
-  { day: 'Lunes – Viernes', hours: '10:00 AM – 10:00 PM', active: true },
-  { day: 'Sábado', hours: '9:00 AM – 11:00 PM', active: true },
-  { day: 'Domingo', hours: '10:00 AM – 9:00 PM', active: true },
+  { day: 'Sábado', hours: '5:00 PM – 10:00 PM', active: true },
+  { day: 'Domingo', hours: '5:00 PM – 10:00 PM', active: true },
 ]
 
 const socials = [
@@ -100,9 +99,9 @@ export default function UbicacionPage() {
             <div className="flex-1">
               <p className="font-bold text-app-text text-sm">Dirección</p>
               <p className="text-app-muted text-sm mt-0.5 leading-relaxed">
-                Acámbaro, Guanajuato, México
+                Plaza Alcasa (Cinepolis), Local #1
                 <br />
-                <span className="text-xs">(Actualiza con tu dirección exacta)</span>
+                Acámbaro, Guanajuato, México
               </p>
             </div>
           </div>
@@ -144,9 +143,9 @@ export default function UbicacionPage() {
             ))}
           </div>
 
-          <div className="mt-4 bg-green-50 border border-green-200 rounded-2xl px-3 py-2.5 flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <p className="text-green-700 text-xs font-semibold">Abierto ahora</p>
+          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-2xl px-3 py-2.5 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <p className="text-amber-700 text-xs font-semibold">Solo fines de semana · 5 PM – 10 PM</p>
           </div>
         </motion.div>
       </div>
