@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { User, Phone, Send, CheckCircle2, AlertCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { addParticipante } from '@/lib/utils/participantes'
 
 export default function CouponForm() {
   const [form, setForm] = useState({ nombre: '', telefono: '' })
@@ -30,21 +31,14 @@ export default function CouponForm() {
     setStatus('loading')
 
     try {
-      const res = await fetch('/api/cupones', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: form.nombre.trim(), telefono: form.telefono }),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.message || 'Error al registrarte')
-      }
-
+      // Guarda el registro localmente (sin backend).
+      addParticipante({ nombre: form.nombre.trim(), telefono: form.telefono })
+      // Pequeña pausa para que se vea el estado de carga.
+      await new Promise((r) => setTimeout(r, 400))
       setStatus('success')
     } catch (err) {
       setStatus('error')
-      setError(err.message || 'Ocurrió un error. Intenta de nuevo.')
+      setError('No se pudo guardar tu registro. Intenta de nuevo.')
     }
   }
 
@@ -66,7 +60,7 @@ export default function CouponForm() {
         <div className="flex justify-center mb-4">
           <CheckCircle2 size={40} className="text-emerald-500" />
         </div>
-        <h3 className="text-xl font-black text-app-text mb-2">¡Ya estás participando!</h3>
+        <h3 className="text-xl font-black text-app-text mb-2">¡Gracias por participar! 🎉</h3>
         <p className="text-app-muted text-sm mb-1">
           <strong className="text-app-text">{form.nombre}</strong>, tu registro fue exitoso.
         </p>

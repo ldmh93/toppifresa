@@ -33,12 +33,15 @@ export default function HeroApp() {
         {/* Top bar */}
         <div className="flex items-center justify-between mb-4">
           <p className="text-white/70 text-sm font-medium">📍 Acámbaro, Gto.</p>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm"
-          >
-            <Bell size={20} className="text-white" />
-          </motion.button>
+          <Link href="/promos" aria-label="Ver promociones">
+            <motion.div
+              whileTap={{ scale: 0.9 }}
+              className="relative w-10 h-10 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm"
+            >
+              <Bell size={20} className="text-white" />
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-primary-light border-2 border-[#9B1C40] animate-pulse" />
+            </motion.div>
+          </Link>
         </div>
 
         {/* Logo (hasta arriba) */}

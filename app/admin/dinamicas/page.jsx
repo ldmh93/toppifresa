@@ -4,24 +4,25 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { RefreshCw, Download, Trophy, Phone, Trash2 } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils/formatDate'
+import {
+  getParticipantes,
+  clearParticipantes,
+  descargarParticipantesCSV,
+} from '@/lib/utils/participantes'
 
 export default function AdminDinamicas() {
   const [participants, setParticipants] = useState([])
   const [loading, setLoading] = useState(true)
   const [winner, setWinner] = useState(null)
-  const [apiKey] = useState(() =>
-    typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('admin_key') || '' : '',
-  )
 
-  const fetchData = async () => {
+  const fetchData = () => {
     setLoading(true)
-    try {
-      const res = await fetch(`/api/cupones?key=${encodeURIComponent(apiKey)}`)
-      if (res.ok) {
-        const data = await res.json()
-        setParticipants(data.cupones || [])
-      }
-    } catch {}
+    const list = getParticipantes().map((p) => ({
+      ...p,
+      id: `${p.telefono}-${p.fecha}`,
+      createdAt: p.fecha,
+    }))
+    setParticipants(list)
     setLoading(false)
   }
 
@@ -33,16 +34,12 @@ export default function AdminDinamicas() {
     setWinner(participants[idx])
   }
 
-  const exportCSV = () => {
-    const rows = [
-      ['Nombre', 'Teléfono', 'Fecha'],
-      ...participants.map((p) => [p.nombre, p.telefono, p.createdAt || '']),
-    ]
-    const blob = new Blob([rows.map((r) => r.join(',')).join('\n')], { type: 'text/csv' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = `participantes-${Date.now()}.csv`
-    a.click()
+  const handleClear = () => {
+    if (window.confirm('¿Borrar todos los registros? Esta acción no se puede deshacer.')) {
+      clearParticipantes()
+      setParticipants([])
+      setWinner(null)
+    }
   }
 
   return (
@@ -57,11 +54,25 @@ export default function AdminDinamicas() {
             className="w-10 h-10 rounded-2xl bg-white shadow-card flex items-center justify-center">
             <RefreshCw size={18} className={`text-app-muted ${loading ? 'animate-spin' : ''}`} />
           </button>
-          <button onClick={exportCSV}
-            className="w-10 h-10 rounded-2xl bg-white shadow-card flex items-center justify-center">
+          <button onClick={descargarParticipantesCSV} disabled={!participants.length}
+            className="w-10 h-10 rounded-2xl bg-white shadow-card flex items-center justify-center disabled:opacity-40"
+            aria-label="Descargar Excel">
             <Download size={18} className="text-app-muted" />
           </button>
+          <button onClick={handleClear} disabled={!participants.length}
+            className="w-10 h-10 rounded-2xl bg-white shadow-card flex items-center justify-center disabled:opacity-40"
+            aria-label="Borrar todos">
+            <Trash2 size={18} className="text-red-500" />
+          </button>
         </div>
+      </div>
+
+      {/* Aviso de almacenamiento local */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-5">
+        <p className="text-amber-700 text-xs leading-relaxed">
+          Los registros se guardan en <strong>este dispositivo/navegador</strong>. Solo aparecen
+          los que se llenaron desde este mismo aparato. Descarga el Excel para respaldarlos.
+        </p>
       </div>
 
       {/* Winner picker */}
@@ -104,8 +115,8 @@ export default function AdminDinamicas() {
         ) : participants.length === 0 ? (
           <div className="p-8 text-center">
             <p className="text-4xl mb-2">📋</p>
-            <p className="text-app-muted text-sm">Aún no hay participantes</p>
-            <p className="text-xs text-app-muted mt-1">Configura Firebase en .env.local para ver datos reales</p>
+            <p className="text-app-muted text-sm">Aún no hay participantes en este dispositivo</p>
+            <p className="text-xs text-app-muted mt-1">Los registros del formulario aparecerán aquí</p>
           </div>
         ) : (
           participants.map((p, i) => (

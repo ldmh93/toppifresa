@@ -92,9 +92,9 @@ export default function ToppingsPage() {
       {/* Info banner */}
       <div className="px-5 mt-4 mb-6">
         <div className="bg-purple-50 border border-purple-200 rounded-2xl p-4 flex gap-3">
-          <span className="text-xl">💡</span>
+          <span className="text-xl">⚠️</span>
           <p className="text-purple-700 text-sm font-medium">
-            Los toppings incluidos varían según el producto. Escríbenos por WhatsApp para personalizarlo.
+            Solo puedes escoger <span className="font-black">2 toppings por producto</span>. Elige tus favoritos y personalízalo por WhatsApp.
           </p>
         </div>
       </div>
