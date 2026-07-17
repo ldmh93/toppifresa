@@ -69,7 +69,7 @@ export default function BottomTabs() {
 
   return (
     <nav
-      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-50"
+      className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[480px] z-50"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="glass border-t border-app-border shadow-bottom-nav">

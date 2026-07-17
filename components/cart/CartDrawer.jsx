@@ -641,7 +641,7 @@ export default function CartDrawer() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-              className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[70] bg-app-bg rounded-t-3xl flex flex-col"
+              className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[480px] z-[70] bg-app-bg rounded-t-3xl flex flex-col"
               style={{ maxHeight: '92dvh' }}
             >
               {/* Handle + header */}

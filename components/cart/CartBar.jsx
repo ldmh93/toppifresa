@@ -20,7 +20,7 @@ export default function CartBar() {
           exit={{ y: 90, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 380, damping: 30 }}
           onClick={() => setDrawerOpen(true)}
-          className="fixed left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-[448px] bg-primary text-white rounded-2xl shadow-fab px-4 py-3.5 flex items-center justify-between"
+          className="fixed inset-x-4 mx-auto z-40 w-auto max-w-[448px] bg-primary text-white rounded-2xl shadow-fab px-4 py-3.5 flex items-center justify-between"
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 76px)' }}
         >
           <div className="flex items-center gap-3">

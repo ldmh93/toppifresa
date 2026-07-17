@@ -51,8 +51,11 @@ export default function FloatingWhatsApp() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="fixed right-4 z-50 flex flex-col gap-2 max-w-[240px]"
-            style={{ bottom: `calc(env(safe-area-inset-bottom, 0px) + ${panelBottom}px)` }}
+            className="fixed z-50 flex flex-col gap-2 max-w-[240px]"
+            style={{
+              bottom: `calc(env(safe-area-inset-bottom, 0px) + ${panelBottom}px)`,
+              right: 'max(1rem, calc(50% - 224px))',
+            }}
           >
             <div className="bg-white rounded-2xl shadow-card-hover p-3 mb-2">
               <p className="text-xs font-semibold text-app-muted mb-2">Mensajes rápidos</p>
@@ -78,9 +81,10 @@ export default function FloatingWhatsApp() {
       {/* FAB Button */}
       <motion.button
         onClick={() => setOpen((v) => !v)}
-        className="fixed right-4 z-50 w-14 h-14 rounded-full shadow-fab tap-scale flex items-center justify-center"
+        className="fixed z-50 w-14 h-14 rounded-full shadow-fab tap-scale flex items-center justify-center"
         style={{
           bottom: `calc(env(safe-area-inset-bottom, 0px) + ${fabBottom}px)`,
+          right: 'max(1rem, calc(50% - 224px))',
           background: open ? '#1C1C1E' : '#25D366',
         }}
         animate={{ rotate: open ? 45 : 0 }}
