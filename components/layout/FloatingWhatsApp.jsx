@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X } from 'lucide-react'
 import { useState } from 'react'
+import { useCart } from '@/lib/cart/CartContext'
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524611234567'
 
@@ -15,6 +16,11 @@ const quickMessages = [
 
 export default function FloatingWhatsApp() {
   const [open, setOpen] = useState(false)
+  const cart = useCart()
+  // Sube el botón cuando la barra del carrito está visible para no encimarse
+  const cartBarVisible = cart?.hydrated && cart.itemCount > 0 && !cart.drawerOpen
+  const fabBottom = cartBarVisible ? 148 : 88
+  const panelBottom = cartBarVisible ? 208 : 148
 
   const sendMessage = (text) => {
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`
@@ -45,8 +51,8 @@ export default function FloatingWhatsApp() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="fixed bottom-[100px] right-4 z-50 flex flex-col gap-2 max-w-[240px]"
-            style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 100px)' }}
+            className="fixed right-4 z-50 flex flex-col gap-2 max-w-[240px]"
+            style={{ bottom: `calc(env(safe-area-inset-bottom, 0px) + ${panelBottom}px)` }}
           >
             <div className="bg-white rounded-2xl shadow-card-hover p-3 mb-2">
               <p className="text-xs font-semibold text-app-muted mb-2">Mensajes rápidos</p>
@@ -74,7 +80,7 @@ export default function FloatingWhatsApp() {
         onClick={() => setOpen((v) => !v)}
         className="fixed right-4 z-50 w-14 h-14 rounded-full shadow-fab tap-scale flex items-center justify-center"
         style={{
-          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 88px)',
+          bottom: `calc(env(safe-area-inset-bottom, 0px) + ${fabBottom}px)`,
           background: open ? '#1C1C1E' : '#25D366',
         }}
         animate={{ rotate: open ? 45 : 0 }}

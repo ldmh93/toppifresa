@@ -3,12 +3,12 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  MessageCircle, Share2, ChevronDown,
+  ShoppingBag, Share2, ChevronDown,
   Plus, Minus, StickyNote, Check, Star,
 } from 'lucide-react'
 import Image from 'next/image'
 import Badge from '@/components/ui/Badge'
-import { openWhatsApp } from '@/lib/utils/whatsapp'
+import { useCart } from '@/lib/cart/CartContext'
 
 export default function MenuCard({ product, index }) {
   const [quantity, setQuantity] = useState(1)
@@ -16,23 +16,18 @@ export default function MenuCard({ product, index }) {
   const [showNote, setShowNote] = useState(false)
   const [showToppings, setShowToppings] = useState(false)
   const [ordered, setOrdered] = useState(false)
-  const [fav, setFav] = useState(false)
+  const { addItem, favorites, toggleFavorite } = useCart()
+  const fav = favorites.includes(product.id)
 
   const total = product.price * quantity
 
   const handleOrder = () => {
-    const lines = [
-      `Hola! 👋 Quiero hacer un pedido en Toppifresa:`,
-      ``,
-      `${product.emoji} *${product.name}*${quantity > 1 ? ` × ${quantity}` : ''}`,
-      `💰 Total: $${total}`,
-    ]
-    if (note.trim()) lines.push(`📝 Nota: ${note.trim()}`)
-    lines.push(``, `¿Está disponible? 😊`)
-
-    openWhatsApp(lines.join('\n'))
+    addItem(product, quantity, note)
     setOrdered(true)
-    setTimeout(() => setOrdered(false), 3000)
+    setQuantity(1)
+    setNote('')
+    setShowNote(false)
+    setTimeout(() => setOrdered(false), 1800)
   }
 
   const handleShare = async () => {
@@ -99,7 +94,7 @@ export default function MenuCard({ product, index }) {
         <div className="absolute top-2 right-2 flex gap-1.5">
           <motion.button
             whileTap={{ scale: 0.85 }}
-            onClick={() => setFav((v) => !v)}
+            onClick={() => toggleFavorite(product.id)}
             className="w-7 h-7 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
           >
             <Star
@@ -257,7 +252,7 @@ export default function MenuCard({ product, index }) {
                 className="flex items-center gap-2"
               >
                 <Check size={18} />
-                ¡Pedido enviado a WhatsApp!
+                ¡Agregado al carrito!
               </motion.span>
             ) : (
               <motion.span
@@ -267,8 +262,8 @@ export default function MenuCard({ product, index }) {
                 exit={{ opacity: 0 }}
                 className="flex items-center gap-2"
               >
-                <MessageCircle size={18} />
-                Pedir por WhatsApp · ${total}
+                <ShoppingBag size={18} />
+                Agregar al carrito · ${total}
               </motion.span>
             )}
           </AnimatePresence>

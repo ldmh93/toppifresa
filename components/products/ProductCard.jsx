@@ -2,19 +2,20 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
-import { MessageCircle, ChevronDown, Check } from 'lucide-react'
+import { ShoppingBag, ChevronDown, Check, Heart } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
-import { buildOrderMessage, openWhatsApp } from '@/lib/utils/whatsapp'
+import { useCart } from '@/lib/cart/CartContext'
 
 export default function ProductCard({ product }) {
   const [expanded, setExpanded] = useState(false)
-  const [ordered, setOrdered] = useState(false)
+  const [added, setAdded] = useState(false)
+  const { addItem, favorites, toggleFavorite } = useCart()
+  const isFav = favorites.includes(product.id)
 
-  const handleOrder = () => {
-    const msg = buildOrderMessage({ productName: product.name, price: product.price })
-    openWhatsApp(msg)
-    setOrdered(true)
-    setTimeout(() => setOrdered(false), 2500)
+  const handleAdd = () => {
+    addItem(product)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1500)
   }
 
   return (
@@ -34,6 +35,18 @@ export default function ProductCard({ product }) {
           <Badge>{product.tag}</Badge>
           {product.isNew && <Badge type="new">Nuevo</Badge>}
         </div>
+
+        {/* Favorito */}
+        <motion.button
+          whileTap={{ scale: 0.8 }}
+          onClick={() => toggleFavorite(product.id)}
+          className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/25 backdrop-blur-sm flex items-center justify-center"
+          aria-label="Favorito"
+        >
+          <motion.div animate={{ scale: isFav ? [1, 1.35, 1] : 1 }} transition={{ duration: 0.3 }}>
+            <Heart size={15} className={isFav ? 'text-red-400 fill-red-400' : 'text-white'} />
+          </motion.div>
+        </motion.button>
 
         {/* Toppings preview */}
         <div className="absolute bottom-2 right-2">
@@ -94,18 +107,18 @@ export default function ProductCard({ product }) {
           )}
         </AnimatePresence>
 
-        {/* Order button */}
+        {/* Add to cart button */}
         <motion.button
           whileTap={{ scale: 0.97 }}
-          onClick={handleOrder}
+          onClick={handleAdd}
           className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm transition-all duration-200"
           style={{
-            background: ordered ? '#25D366' : `linear-gradient(135deg, ${product.colors.from}, ${product.colors.to})`,
-            color: product.colors.text,
+            background: added ? '#25D366' : `linear-gradient(135deg, ${product.colors.from}, ${product.colors.to})`,
+            color: added ? '#ffffff' : product.colors.text,
           }}
         >
           <AnimatePresence mode="wait">
-            {ordered ? (
+            {added ? (
               <motion.div
                 key="check"
                 initial={{ scale: 0 }}
@@ -114,17 +127,17 @@ export default function ProductCard({ product }) {
                 className="flex items-center gap-2"
               >
                 <Check size={18} />
-                ¡Pedido enviado!
+                ¡Agregado al carrito!
               </motion.div>
             ) : (
               <motion.div
-                key="order"
+                key="add"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 className="flex items-center gap-2"
               >
-                <MessageCircle size={18} />
-                Pedir por WhatsApp — ${product.price}
+                <ShoppingBag size={18} />
+                Agregar al carrito — ${product.price}
               </motion.div>
             )}
           </AnimatePresence>
