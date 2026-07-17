@@ -20,6 +20,30 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Foco visible para navegación con teclado (accesibilidad) */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Respeta la preferencia de menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -79,6 +103,15 @@ body {
   border-radius: 20px;
   box-shadow: 0 2px 20px rgba(214, 56, 100, 0.08);
   overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* Elevación al pasar el mouse (solo dispositivos con cursor) */
+@media (hover: hover) {
+  .card-base:hover {
+    box-shadow: 0 8px 40px rgba(214, 56, 100, 0.16);
+    transform: translateY(-2px);
+  }
 }
 
 /* Tap animation */

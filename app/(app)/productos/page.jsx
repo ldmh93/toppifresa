@@ -1,9 +1,10 @@
 import ProductGrid from '@/components/products/ProductGrid'
+import { products } from '@/lib/data/products'
 import { ShoppingBag } from 'lucide-react'
 
 export const metadata = {
   title: 'Productos',
-  description: 'Los 10 sabores de Toppifresa. Fresas con crema y toppings premium.',
+  description: 'El menú completo de Toppifresa. Fresas con crema y toppings premium en Acámbaro.',
 }
 
 export default function ProductosPage() {
@@ -20,7 +21,7 @@ export default function ProductosPage() {
           </div>
           <div>
             <h1 className="text-white font-black text-2xl leading-tight">Nuestros Toppis</h1>
-            <p className="text-white/70 text-sm">10 sabores únicos</p>
+            <p className="text-white/70 text-sm">{products.length} sabores únicos</p>
           </div>
         </div>
       </div>

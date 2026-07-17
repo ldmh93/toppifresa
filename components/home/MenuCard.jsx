@@ -95,19 +95,21 @@ export default function MenuCard({ product, index }) {
           <motion.button
             whileTap={{ scale: 0.85 }}
             onClick={() => toggleFavorite(product.id)}
-            className="w-7 h-7 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
+            aria-label={fav ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+            className="w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
           >
             <Star
-              size={13}
+              size={14}
               className={fav ? 'text-amber-300 fill-amber-300' : 'text-white'}
             />
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.85 }}
             onClick={handleShare}
-            className="w-7 h-7 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
+            aria-label="Compartir producto"
+            className="w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
           >
-            <Share2 size={13} className="text-white" />
+            <Share2 size={14} className="text-white" />
           </motion.button>
         </div>
 
@@ -134,6 +136,7 @@ export default function MenuCard({ product, index }) {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              aria-label="Disminuir cantidad"
               className="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center"
             >
               <Minus size={14} className="text-app-text" />
@@ -144,6 +147,7 @@ export default function MenuCard({ product, index }) {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => setQuantity(quantity + 1)}
+              aria-label="Aumentar cantidad"
               className="w-8 h-8 rounded-xl bg-primary shadow-sm flex items-center justify-center"
             >
               <Plus size={14} className="text-white" />

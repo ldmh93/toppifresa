@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { validarCupon } from '@/lib/data/cupones'
 
 const CartContext = createContext(null)
@@ -36,7 +36,7 @@ export function CartProvider({ children }) {
     window.localStorage.setItem(FAVS_KEY, JSON.stringify(favorites))
   }, [favorites, hydrated])
 
-  const addItem = (product, qty = 1, note = '') => {
+  const addItem = useCallback((product, qty = 1, note = '') => {
     setItems((prev) => {
       const idx = prev.findIndex((it) => it.id === product.id)
       if (idx >= 0) {
@@ -61,34 +61,36 @@ export function CartProvider({ children }) {
         },
       ]
     })
-  }
+  }, [])
 
-  const updateQty = (id, qty) =>
+  const updateQty = useCallback((id, qty) =>
     setItems((prev) =>
       qty <= 0 ? prev.filter((i) => i.id !== id) : prev.map((i) => (i.id === id ? { ...i, qty } : i)),
-    )
+    ), [])
 
-  const updateNote = (id, note) =>
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, note } : i)))
+  const updateNote = useCallback((id, note) =>
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, note } : i))), [])
 
-  const removeItem = (id) => setItems((prev) => prev.filter((i) => i.id !== id))
+  const removeItem = useCallback((id) => setItems((prev) => prev.filter((i) => i.id !== id)), [])
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems([])
     setCoupon(null)
-  }
+  }, [])
 
-  const toggleFavorite = (id) =>
-    setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]))
+  const toggleFavorite = useCallback((id) =>
+    setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id])), [])
 
-  const applyCoupon = (code) => {
+  const applyCoupon = useCallback((code) => {
     const c = validarCupon(code)
     if (c) {
       setCoupon(c)
       return true
     }
     return false
-  }
+  }, [])
+
+  const removeCoupon = useCallback(() => setCoupon(null), [])
 
   const subtotal = useMemo(() => items.reduce((acc, i) => acc + i.price * i.qty, 0), [items])
 
@@ -99,34 +101,37 @@ export function CartProvider({ children }) {
   }, [coupon, subtotal])
 
   const total = subtotal - discount
-  const itemCount = items.reduce((acc, i) => acc + i.qty, 0)
+  const itemCount = useMemo(() => items.reduce((acc, i) => acc + i.qty, 0), [items])
 
-  return (
-    <CartContext.Provider
-      value={{
-        items,
-        itemCount,
-        subtotal,
-        discount,
-        total,
-        coupon,
-        favorites,
-        drawerOpen,
-        hydrated,
-        addItem,
-        updateQty,
-        updateNote,
-        removeItem,
-        clearCart,
-        toggleFavorite,
-        applyCoupon,
-        removeCoupon: () => setCoupon(null),
-        setDrawerOpen,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+  // Valor memoizado: evita re-renders innecesarios en todos los consumidores
+  const value = useMemo(
+    () => ({
+      items,
+      itemCount,
+      subtotal,
+      discount,
+      total,
+      coupon,
+      favorites,
+      drawerOpen,
+      hydrated,
+      addItem,
+      updateQty,
+      updateNote,
+      removeItem,
+      clearCart,
+      toggleFavorite,
+      applyCoupon,
+      removeCoupon,
+      setDrawerOpen,
+    }),
+    [
+      items, itemCount, subtotal, discount, total, coupon, favorites, drawerOpen, hydrated,
+      addItem, updateQty, updateNote, removeItem, clearCart, toggleFavorite, applyCoupon, removeCoupon,
+    ],
   )
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
 
 export function useCart() {

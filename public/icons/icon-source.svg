@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E8508A"/>
+      <stop offset="1" stop-color="#B02952"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- hojas -->
+  <path d="M256 148 C 214 118 168 116 140 136 C 174 152 214 160 250 164 Z" fill="#5FB45E"/>
+  <path d="M256 148 C 298 118 344 116 372 136 C 338 152 298 160 262 164 Z" fill="#5FB45E"/>
+  <path d="M256 152 C 236 128 232 100 244 78 C 258 96 264 124 262 150 Z" fill="#4A9E4C"/>
+  <path d="M256 152 C 276 128 280 100 268 78 C 254 96 248 124 250 150 Z" fill="#5FB45E"/>
+  <!-- cuerpo de la fresa -->
+  <path d="M256 170 C 158 170 124 226 128 280 C 134 358 194 434 256 452 C 318 434 378 358 384 280 C 388 226 354 170 256 170 Z" fill="#ffffff"/>
+  <!-- semillas -->
+  <g fill="#E8508A">
+    <ellipse cx="200" cy="230" rx="7" ry="11"/>
+    <ellipse cx="256" cy="216" rx="7" ry="11"/>
+    <ellipse cx="312" cy="230" rx="7" ry="11"/>
+    <ellipse cx="172" cy="290" rx="7" ry="11"/>
+    <ellipse cx="228" cy="278" rx="7" ry="11"/>
+    <ellipse cx="284" cy="278" rx="7" ry="11"/>
+    <ellipse cx="340" cy="290" rx="7" ry="11"/>
+    <ellipse cx="200" cy="344" rx="7" ry="11"/>
+    <ellipse cx="256" cy="332" rx="7" ry="11"/>
+    <ellipse cx="312" cy="344" rx="7" ry="11"/>
+    <ellipse cx="230" cy="398" rx="7" ry="11"/>
+    <ellipse cx="282" cy="398" rx="7" ry="11"/>
+  </g>
+</svg>

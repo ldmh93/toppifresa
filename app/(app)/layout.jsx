@@ -2,7 +2,7 @@ import BottomTabs from '@/components/layout/BottomTabs'
 import FloatingWhatsApp from '@/components/layout/FloatingWhatsApp'
 import { CartProvider } from '@/lib/cart/CartContext'
 import CartBar from '@/components/cart/CartBar'
-import CartDrawer from '@/components/cart/CartDrawer'
+import CartDrawer from '@/components/cart/CartDrawerLazy'
 
 export default function AppLayout({ children }) {
   return (

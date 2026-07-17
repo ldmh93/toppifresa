@@ -5,7 +5,7 @@ import { MessageCircle, X } from 'lucide-react'
 import { useState } from 'react'
 import { useCart } from '@/lib/cart/CartContext'
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524611234567'
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524439425620'
 
 const quickMessages = [
   { label: '🍓 Ver carta completa', text: 'Hola! Quiero ver la carta completa de Toppifresa 🍓' },

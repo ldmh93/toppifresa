@@ -1,10 +1,10 @@
 'use client'
 
-import { motion, useAnimationControls } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { getActivePromos } from '@/lib/data/promos'
 import { openWhatsApp, buildPromoMessage } from '@/lib/utils/whatsapp'
-import { Zap, Clock } from 'lucide-react'
+import { Zap, Clock, PiggyBank } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 
 function PromoCard({ promo, index }) {
@@ -17,7 +17,7 @@ function PromoCard({ promo, index }) {
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1, type: 'spring', stiffness: 280, damping: 24 }}
-      className="flex-shrink-0 w-[300px] rounded-3xl overflow-hidden relative"
+      className="flex-shrink-0 w-[300px] rounded-3xl overflow-hidden relative snap-center"
       style={{
         background: `linear-gradient(145deg, ${promo.colors.from}, ${promo.colors.to})`,
         minHeight: '200px',
@@ -30,7 +30,15 @@ function PromoCard({ promo, index }) {
       <div className="relative z-10 p-5 h-full flex flex-col justify-between">
         {/* Top row */}
         <div className="flex items-start justify-between">
-          <Badge type={promo.tag === 'HOY' ? 'hot' : 'promo'}>{promo.tag}</Badge>
+          <div className="flex items-center gap-2">
+            <Badge type={promo.tag === 'HOY' ? 'hot' : 'promo'}>{promo.tag}</Badge>
+            {promo.savings > 0 && (
+              <span className="inline-flex items-center gap-1 bg-emerald-400 text-emerald-950 text-[10px] font-black px-2 py-0.5 rounded-full">
+                <PiggyBank size={11} />
+                Ahorra ${promo.savings}
+              </span>
+            )}
+          </div>
           <span className="text-4xl">{promo.emoji}</span>
         </div>
 
@@ -69,6 +77,28 @@ function PromoCard({ promo, index }) {
 
 export default function PromoCarousel() {
   const promos = getActivePromos()
+  const scrollRef = useRef(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const handleScroll = () => {
+    const el = scrollRef.current
+    if (!el) return
+    // 300px de tarjeta + 16px de gap
+    const idx = Math.round(el.scrollLeft / 316)
+    setActiveIndex(Math.min(promos.length - 1, Math.max(0, idx)))
+  }
+
+  if (promos.length === 0) {
+    return (
+      <section className="mt-2 px-5">
+        <div className="card-base p-8 text-center">
+          <span className="text-5xl">🍓</span>
+          <p className="font-bold text-app-text mt-3 mb-1">Pronto habrá nuevas promos</p>
+          <p className="text-app-muted text-sm">Síguenos en Instagram para enterarte primero</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="mt-2">
@@ -84,23 +114,29 @@ export default function PromoCarousel() {
       </div>
 
       {/* Carousel */}
-      <div className="flex gap-4 overflow-x-auto hide-scrollbar px-5 pb-4">
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex gap-4 overflow-x-auto hide-scrollbar px-5 pb-4 snap-x snap-mandatory"
+      >
         {promos.map((promo, i) => (
           <PromoCard key={promo.id} promo={promo} index={i} />
         ))}
       </div>
 
-      {/* Dots indicator */}
-      <div className="flex justify-center gap-1.5 mt-2">
-        {promos.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === 0 ? 'w-4 bg-primary' : 'w-1.5 bg-primary/30'
-            }`}
-          />
-        ))}
-      </div>
+      {/* Dots indicator (sigue el scroll real) */}
+      {promos.length > 1 && (
+        <div className="flex justify-center gap-1.5 mt-2" role="tablist" aria-label="Posición del carrusel">
+          {promos.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === activeIndex ? 'w-4 bg-primary' : 'w-1.5 bg-primary/30'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }

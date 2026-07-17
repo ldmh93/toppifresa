@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Home, ShoppingBag, Tag, Sparkles, MapPin, MessageCircle } from 'lucide-react'
 import clsx from 'clsx'
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524611234567'
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524439425620'
 
 const tabs = [
   { href: '/', icon: Home, label: 'Inicio', exact: true },

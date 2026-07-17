@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { toppingCategories } from '@/lib/data/toppings'
+import { products } from '@/lib/data/products'
 import { Sparkles } from 'lucide-react'
 
 function ToppingChip({ topping, delay }) {
@@ -79,7 +80,7 @@ export default function ToppingsPage() {
               n: toppingCategories.reduce((acc, c) => acc + c.items.length, 0),
               label: 'Toppings',
             },
-            { n: '10', label: 'Sabores' },
+            { n: products.length, label: 'Sabores' },
           ].map((stat) => (
             <div key={stat.label} className="flex-1 bg-white/15 backdrop-blur-sm rounded-2xl p-3 text-center">
               <p className="text-white font-black text-xl">{stat.n}</p>

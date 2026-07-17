@@ -5,18 +5,17 @@ import { motion } from 'framer-motion'
 import { Save, Phone, MapPin, Clock, Instagram, Info, Check } from 'lucide-react'
 
 const DEFAULT_CONFIG = {
-  whatsapp: '524611234567',
+  whatsapp: '524439425620',
   businessName: 'Toppifresa',
-  address: 'Acámbaro, Guanajuato, México',
+  address: 'Plaza Alcasa (Cinepolis), Local #1, Acámbaro, Guanajuato',
   addressDetail: '',
   instagram: '@toppifresa',
   schedule: [
-    { day: 'Lunes – Viernes', hours: '10:00 AM – 10:00 PM', open: true },
-    { day: 'Sábado', hours: '9:00 AM – 11:00 PM', open: true },
-    { day: 'Domingo', hours: '10:00 AM – 9:00 PM', open: true },
+    { day: 'Sábado', hours: '5:00 PM – 10:00 PM', open: true },
+    { day: 'Domingo', hours: '5:00 PM – 10:00 PM', open: true },
   ],
   deliveryEnabled: true,
-  deliveryNote: 'Entregas locales en Acámbaro. Consultar disponibilidad.',
+  deliveryNote: 'Entregas a domicilio en pedidos de $100 o más. Zona Centro $25; fuera de zona se cotiza.',
 }
 
 function Section({ title, icon: Icon, children }) {

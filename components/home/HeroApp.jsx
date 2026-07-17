@@ -65,7 +65,7 @@ export default function HeroApp() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="text-white/70 text-sm text-center mb-6"
         >
-          10 sabores únicos · Toppings premium · Pide por WhatsApp
+          Sabores únicos · Toppings premium · Pide por WhatsApp
         </motion.p>
 
         {/* Search bar (decorative / links to productos) */}

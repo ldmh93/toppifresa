@@ -61,21 +61,23 @@ function CartItem({ item }) {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => (item.qty === 1 ? removeItem(item.id) : updateQty(item.id, item.qty - 1))}
-              className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center"
+              aria-label={item.qty === 1 ? 'Eliminar del carrito' : 'Disminuir cantidad'}
+              className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center"
             >
               {item.qty === 1 ? (
-                <Trash2 size={13} className="text-red-400" />
+                <Trash2 size={14} className="text-red-400" />
               ) : (
-                <Minus size={13} className="text-app-text" />
+                <Minus size={14} className="text-app-text" />
               )}
             </motion.button>
-            <span className="font-black text-app-text text-sm w-5 text-center">{item.qty}</span>
+            <span className="font-black text-app-text text-sm w-5 text-center" aria-live="polite">{item.qty}</span>
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => updateQty(item.id, item.qty + 1)}
-              className="w-7 h-7 rounded-lg bg-primary shadow-sm flex items-center justify-center"
+              aria-label="Aumentar cantidad"
+              className="w-8 h-8 rounded-lg bg-primary shadow-sm flex items-center justify-center"
             >
-              <Plus size={13} className="text-white" />
+              <Plus size={14} className="text-white" />
             </motion.button>
           </div>
           <motion.p key={item.qty} initial={{ scale: 1.15 }} animate={{ scale: 1 }} className="font-black text-primary text-sm">
@@ -145,9 +147,10 @@ function Recommendations() {
               <motion.button
                 whileTap={{ scale: 0.8 }}
                 onClick={() => addItem(p)}
-                className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center"
+                aria-label={`Agregar ${p.name} al carrito`}
+                className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"
               >
-                <Plus size={14} className="text-white" />
+                <Plus size={15} className="text-white" />
               </motion.button>
             </div>
           </div>
