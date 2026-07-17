@@ -3,13 +3,9 @@
 import { motion } from 'framer-motion'
 import { MapPin, Clock, Phone, Navigation, Instagram, MessageCircle } from 'lucide-react'
 import { openWhatsApp, buildLocationMessage } from '@/lib/utils/whatsapp'
+import { HORARIO_DISPLAY as schedule } from '@/lib/data/horarios'
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524439425620'
-
-const schedule = [
-  { day: 'Sábado', hours: '5:00 PM – 10:00 PM', active: true },
-  { day: 'Domingo', hours: '5:00 PM – 10:00 PM', active: true },
-]
 
 const socials = [
   {

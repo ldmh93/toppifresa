@@ -15,6 +15,7 @@ import {
   MENSAJE_MINIMO_DOMICILIO,
   buildCartMessage,
 } from '@/lib/cart/config'
+import { estaAbierto, horariosDisponibles, MENSAJE_CERRADO } from '@/lib/data/horarios'
 
 /* ---------- Item del carrito ---------- */
 function CartItem({ item }) {
@@ -254,6 +255,10 @@ function CheckoutForm({ onBack, onSubmit }) {
 
   const domicilioDisponible = total >= PEDIDO_MINIMO_DOMICILIO
 
+  // Horarios de entrega: solo los del negocio (se calculan al abrir el formulario)
+  const [abierto] = useState(() => estaAbierto())
+  const [slots] = useState(() => horariosDisponibles())
+
   const set = (name, value) => setForm((prev) => ({ ...prev, [name]: value }))
 
   const handlePhone = (v) => set('telefono', v.replace(/\D/g, '').slice(0, 10))
@@ -449,17 +454,34 @@ function CheckoutForm({ onBack, onSubmit }) {
         </div>
       </div>
 
-      {/* Hora deseada */}
+      {/* Hora deseada (solo horarios del negocio) */}
       <div>
         <label className="block text-xs font-bold text-app-text mb-1.5">
           Hora deseada <span className="font-normal text-app-muted">(opcional)</span>
         </label>
-        <input
-          type="time"
-          value={form.hora}
-          onChange={(e) => set('hora', e.target.value)}
-          className={inputCls}
-        />
+        {abierto && slots.length > 0 ? (
+          <select
+            value={form.hora}
+            onChange={(e) => set('hora', e.target.value)}
+            className={inputCls}
+          >
+            <option value="">Lo antes posible</option>
+            {slots.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <>
+            <select disabled className={`${inputCls} opacity-50 cursor-not-allowed`}>
+              <option>Fuera de horario</option>
+            </select>
+            <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-2 mt-2 leading-relaxed">
+              {MENSAJE_CERRADO}
+            </p>
+          </>
+        )}
       </div>
 
       {/* Observaciones */}
