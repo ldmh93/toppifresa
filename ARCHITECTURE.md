@@ -1,7 +1,7 @@
 # ARCHITECTURE.md
 
 > **Fuente única de verdad** del proyecto **Toppifresa**.
-> Última actualización: 2026-07-17 · Commit de referencia: `f1d4aec`.
+> Última actualización: 2026-07-17 · Middleware de auth en `/admin` activo.
 > Mantén este documento sincronizado con cada cambio estructural.
 
 ---
@@ -74,7 +74,7 @@
 
 ## 5. Arquitectura general
 
-Aplicación **frontend-only, estática**. No hay servidor de aplicación, base de datos ni API propia. Todo el estado del cliente vive en el navegador (`localStorage`). El pedido se materializa como un mensaje de WhatsApp.
+Aplicación **frontend-first**: páginas estáticas servidas por CDN, con **una única función de borde** (`middleware.js`) que protege `/admin` con autenticación básica. No hay base de datos ni API propia. Todo el estado del cliente vive en el navegador (`localStorage`). El pedido se materializa como un mensaje de WhatsApp.
 
 ```mermaid
 graph TD
@@ -131,7 +131,7 @@ toppifresa/
 ├── components/
 │   ├── cart/                   # CartBar, CartDrawer, CartDrawerLazy
 │   ├── coupons/CouponForm.jsx  # Registro de dinámica (guarda en localStorage)
-│   ├── home/                   # HeroApp, MenuSection, MenuCard (+ 2 sin uso*)
+│   ├── home/                   # HeroApp, MenuSection, MenuCard
 │   ├── layout/                 # BottomTabs, FloatingWhatsApp, DevCredit
 │   ├── products/               # ProductGrid, ProductCard
 │   ├── promos/PromoCarousel.jsx
@@ -145,13 +145,12 @@ toppifresa/
 ├── public/
 │   ├── icons/                  # Iconos PWA 72–512 px + apple-touch 180
 │   └── toppi-logo.svg          # Logo oficial (hero)
+├── middleware.js               # Basic Auth para /admin (función de borde)
 ├── styles/globals.css          # Variables CSS, utilidades, a11y, reduced-motion
 ├── tailwind.config.js          # Paleta, sombras, radios, keyframes
 ├── next.config.js
 └── jsconfig.json               # Alias @/*
 ```
-
-\* `components/home/FeaturedProducts.jsx` y `components/home/StorySlider.jsx` **no se importan en ningún lado** (código muerto candidato a eliminar — ver §18).
 
 ---
 
@@ -328,7 +327,7 @@ No hay APIs REST/servidor propias. No hay claves secretas en el cliente.
 
 | Aspecto | Estado | Nota / riesgo |
 |---------|--------|---------------|
-| `/admin` sin autenticación | ❌ **Riesgo abierto** | Cualquiera con la URL entra. `robots.txt` lo desindexa, pero no lo protege. Ver §18. |
+| `/admin` protegido | ✅ | Basic Auth vía `middleware.js`. Usuario/clave en env (`ADMIN_USER`, `ADMIN_PASSWORD`). Sin `ADMIN_PASSWORD` el panel responde 503 (seguro por defecto). Credenciales **nunca** en código (repo público). |
 | Variables de entorno | ✅ | Solo `NEXT_PUBLIC_WHATSAPP_NUMBER` (público por diseño). `.env.local` en `.gitignore`. |
 | XSS | ✅ Bajo | React escapa por defecto; único `dangerouslySetInnerHTML` es el JSON-LD (contenido controlado). |
 | CSRF | N/A | No hay endpoints mutables en servidor. |
@@ -410,18 +409,16 @@ graph LR
 - 100 % estático; dependencias muertas eliminadas.
 
 **⚠️ Parcial / con deuda:**
-- `/admin` sin auth y con edición **efímera** (no persiste catálogo).
+- `/admin` ya protegido con Basic Auth, pero la edición de catálogo sigue siendo **efímera** (no persiste; requiere DB).
 - Embed de Google Maps genérico (falta ubicación exacta).
-- Firebase configurable en `.env` pero **no cableado** (el código fue removido).
-- Componentes muertos: `FeaturedProducts.jsx`, `StorySlider.jsx`.
 
 ---
 
 ## 18. Próximos pasos
 
 **Prioridad alta**
-1. **Proteger `/admin`** (contraseña/clave o `middleware` con verificación) — hoy es acceso abierto.
-2. Eliminar código muerto: `FeaturedProducts.jsx`, `StorySlider.jsx`, y revisar `ui/Card.jsx` si no se usa.
+1. ✅ ~~Proteger `/admin`~~ — hecho (Basic Auth en `middleware.js`). Falta **definir `ADMIN_PASSWORD` en Vercel**.
+2. ✅ ~~Eliminar código muerto~~ — hecho (`FeaturedProducts.jsx`, `StorySlider.jsx`, `ui/Card.jsx` eliminados).
 3. Reemplazar el embed de Maps por la URL/coordenadas reales de Plaza Alcasa.
 
 **Prioridad media**
