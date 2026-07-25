@@ -590,7 +590,7 @@ function ConfirmModal({ onCancel, onConfirm }) {
         <h3 className="font-black text-app-text text-lg mb-3">Importante</h3>
         <div className="text-app-muted text-sm leading-relaxed flex flex-col gap-2.5 mb-5">
           <p>
-            Al presionar <strong className="text-app-text">"Enviar pedido por WhatsApp"</strong>,
+            Al presionar <strong className="text-app-text">«Enviar pedido por WhatsApp»</strong>,
             únicamente se enviará una <strong className="text-app-text">solicitud de pedido</strong>.
           </p>
           <p className="font-bold text-app-text">Tu pedido NO quedará confirmado automáticamente.</p>
