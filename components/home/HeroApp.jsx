@@ -44,19 +44,23 @@ export default function HeroApp() {
           </Link>
         </div>
 
-        {/* Logo (hasta arriba) */}
-        <motion.img
-          src="/toppi-logo.svg"
-          alt="Toppifresa"
-          className="w-full max-w-[300px] mx-auto select-none drop-shadow-lg"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1, y: [-4, 4, -4] }}
-          transition={{
-            opacity: { duration: 0.5 },
-            scale: { duration: 0.5 },
-            y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-          }}
-        />
+        {/* Logo (hasta arriba). Va dentro de un h1 para que la portada tenga
+            encabezado principal; el alt le da el texto accesible. Tailwind
+            resetea los estilos de h1, así que no cambia nada visualmente. */}
+        <h1>
+          <motion.img
+            src="/toppi-logo.svg"
+            alt="Toppifresa — fresas con crema y toppings en Acámbaro"
+            className="w-full max-w-[300px] mx-auto select-none drop-shadow-lg"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1, y: [-4, 4, -4] }}
+            transition={{
+              opacity: { duration: 0.5 },
+              scale: { duration: 0.5 },
+              y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+            }}
+          />
+        </h1>
 
         {/* Tagline */}
         <motion.p

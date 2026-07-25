@@ -5,8 +5,9 @@ import { toppingCategories } from '@/lib/data/toppings'
 import Link from 'next/link'
 import { ArrowRight, Sparkles, Tag } from 'lucide-react'
 
+// El layout raíz ya aplica la plantilla '%s | Toppifresa': aquí solo va el nombre.
 export const metadata = {
-  title: 'Inicio | Toppifresa',
+  title: 'Inicio',
   description: 'Las mejores fresas con crema en Acámbaro, Guanajuato. Pide por WhatsApp.',
 }
 
