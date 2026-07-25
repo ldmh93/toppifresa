@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Send, Store, Bike,
   StickyNote, TicketPercent, Star, AlertTriangle, CheckCircle2, User, Phone,
+  Sparkles,
 } from 'lucide-react'
 import { useCart } from '@/lib/cart/CartContext'
 import { products } from '@/lib/data/products'
@@ -482,6 +483,16 @@ function CheckoutForm({ onBack, onSubmit }) {
             </p>
           </>
         )}
+      </div>
+
+      {/* Recordatorio de toppings: va justo encima de Observaciones para que
+          "el apartado de observaciones" sea el campo inmediatamente siguiente */}
+      <div className="flex gap-2.5 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2.5">
+        <Sparkles size={15} className="text-purple-500 flex-shrink-0 mt-0.5" />
+        <p className="text-purple-700 text-[11px] leading-relaxed">
+          Cada producto incluye la selección de <strong className="font-bold">2 toppings</strong>.
+          Si aún no los has elegido, por favor indícalos en el apartado de observaciones.
+        </p>
       </div>
 
       {/* Observaciones */}
