@@ -33,7 +33,8 @@ export default function ProductCard({ product }) {
         {/* Badges */}
         <div className="absolute top-2.5 left-2.5 flex gap-1.5 flex-wrap">
           <Badge>{product.tag}</Badge>
-          {product.isNew && <Badge type="new">Nuevo</Badge>}
+          {/* Evita "Nuevo Nuevo" cuando el tag del producto ya es 'Nuevo' */}
+          {product.isNew && product.tag !== 'Nuevo' && <Badge type="new">Nuevo</Badge>}
         </div>
 
         {/* Favorito */}
@@ -41,7 +42,8 @@ export default function ProductCard({ product }) {
           whileTap={{ scale: 0.8 }}
           onClick={() => toggleFavorite(product.id)}
           className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/25 backdrop-blur-sm flex items-center justify-center"
-          aria-label="Favorito"
+          aria-label={isFav ? `Quitar ${product.name} de favoritos` : `Agregar ${product.name} a favoritos`}
+          aria-pressed={isFav}
         >
           <motion.div animate={{ scale: isFav ? [1, 1.35, 1] : 1 }} transition={{ duration: 0.3 }}>
             <Heart size={15} className={isFav ? 'text-red-400 fill-red-400' : 'text-white'} />

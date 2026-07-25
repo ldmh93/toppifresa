@@ -124,9 +124,11 @@ export default function PromoCarousel() {
         ))}
       </div>
 
-      {/* Dots indicator (sigue el scroll real) */}
+      {/* Dots indicator (sigue el scroll real). Es un adorno visual, no un
+          control: se oculta a lectores de pantalla en vez de fingir un
+          role="tablist" sin pestañas reales debajo. */}
       {promos.length > 1 && (
-        <div className="flex justify-center gap-1.5 mt-2" role="tablist" aria-label="Posición del carrusel">
+        <div className="flex justify-center gap-1.5 mt-2" aria-hidden="true">
           {promos.map((_, i) => (
             <div
               key={i}

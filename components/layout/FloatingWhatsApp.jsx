@@ -81,6 +81,8 @@ export default function FloatingWhatsApp() {
       {/* FAB Button */}
       <motion.button
         onClick={() => setOpen((v) => !v)}
+        aria-label={open ? 'Cerrar mensajes rápidos' : 'Abrir mensajes rápidos de WhatsApp'}
+        aria-expanded={open}
         className="fixed z-50 w-14 h-14 rounded-full shadow-fab tap-scale flex items-center justify-center"
         style={{
           bottom: `calc(env(safe-area-inset-bottom, 0px) + ${fabBottom}px)`,

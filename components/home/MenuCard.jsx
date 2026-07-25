@@ -62,7 +62,8 @@ export default function MenuCard({ product, index }) {
         <div className="relative z-10 flex-1">
           <div className="flex flex-wrap gap-1.5 mb-2">
             <Badge>{product.tag}</Badge>
-            {product.isNew && <Badge type="new">Nuevo</Badge>}
+            {/* Evita "Nuevo Nuevo" cuando el tag del producto ya es 'Nuevo' */}
+            {product.isNew && product.tag !== 'Nuevo' && <Badge type="new">Nuevo</Badge>}
             {product.popular && (
               <div className="flex items-center gap-1 bg-black/25 backdrop-blur-sm rounded-full px-2 py-0.5">
                 <Star size={10} className="text-amber-300 fill-amber-300" />
@@ -95,7 +96,8 @@ export default function MenuCard({ product, index }) {
           <motion.button
             whileTap={{ scale: 0.85 }}
             onClick={() => toggleFavorite(product.id)}
-            aria-label={fav ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+            aria-label={fav ? `Quitar ${product.name} de favoritos` : `Agregar ${product.name} a favoritos`}
+            aria-pressed={fav}
             className="w-8 h-8 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center"
           >
             <Star

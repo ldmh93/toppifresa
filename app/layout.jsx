@@ -41,12 +41,12 @@ export const metadata = {
   },
 }
 
+// No se bloquea el zoom: impedirlo incumple WCAG 1.4.4 y deja fuera a
+// quien necesita ampliar para leer precios o direcciones.
 export const viewport = {
   themeColor: '#D63864',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: 'cover',
 }
 
