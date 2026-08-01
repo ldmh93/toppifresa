@@ -1,9 +1,31 @@
 import CouponForm from '@/components/coupons/CouponForm'
 import { Sparkles, Trophy, Gift, Users } from 'lucide-react'
+import { getSupabase, getSorteoAbierto } from '@/lib/supabase/server'
 
 export const metadata = {
   title: 'Dinámicas',
   description: 'Participa en las dinámicas de Toppifresa y gana premios.',
+}
+
+// El premio se lee en cada visita, no en el build: al abrir un sorteo nuevo
+// desde /admin la página se actualiza sola, sin volver a publicar el sitio.
+export const dynamic = 'force-dynamic'
+
+// Si Supabase aún no responde, se muestra este premio para no dejar la
+// página rota ni vacía.
+const PREMIO_POR_DEFECTO = {
+  premio: '1 Toppi Grande',
+  descripcion: 'de tu elección + toppings premium',
+}
+
+async function obtenerSorteo() {
+  const db = getSupabase()
+  if (!db) return null
+  try {
+    return await getSorteoAbierto(db)
+  } catch {
+    return null
+  }
 }
 
 const steps = [
@@ -13,7 +35,9 @@ const steps = [
   { icon: '🍓', title: 'Disfruta', desc: 'Ven a reclamar tu Toppi gratis' },
 ]
 
-export default function DinamicasPage() {
+export default async function DinamicasPage() {
+  const sorteo = (await obtenerSorteo()) || PREMIO_POR_DEFECTO
+
   return (
     <div className="pb-4">
       {/* Hero */}
@@ -41,8 +65,10 @@ export default function DinamicasPage() {
               <Gift size={24} className="text-amber-300" />
               <span className="text-white font-bold text-lg">Premio del mes</span>
             </div>
-            <p className="text-white font-black text-2xl mb-1">1 Toppi Grande</p>
-            <p className="text-white/70 text-sm">de tu elección + toppings premium</p>
+            <p className="text-white font-black text-2xl mb-1">{sorteo.premio}</p>
+            {sorteo.descripcion && (
+              <p className="text-white/70 text-sm">{sorteo.descripcion}</p>
+            )}
             <div className="flex items-center gap-2 mt-3">
               <Users size={14} className="text-white/60" />
               <span className="text-white/60 text-xs">Ganador seleccionado al azar</span>

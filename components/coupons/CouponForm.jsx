@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { User, Phone, Send, CheckCircle2, AlertCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import { addParticipante } from '@/lib/utils/participantes'
 
 export default function CouponForm() {
   const [form, setForm] = useState({ nombre: '', telefono: '' })
@@ -31,14 +30,28 @@ export default function CouponForm() {
     setStatus('loading')
 
     try {
-      // Guarda el registro localmente (sin backend).
-      addParticipante({ nombre: form.nombre.trim(), telefono: form.telefono })
-      // Pequeña pausa para que se vea el estado de carga.
-      await new Promise((r) => setTimeout(r, 400))
+      const res = await fetch('/api/participantes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: form.nombre.trim(),
+          telefono: form.telefono,
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        // El servidor manda mensajes ya redactados para la clienta
+        // (número repetido, sorteo cerrado…). Se muestran tal cual.
+        setStatus('idle')
+        setError(data.error || 'No se pudo guardar tu registro. Intenta de nuevo.')
+        return
+      }
+
       setStatus('success')
-    } catch (err) {
-      setStatus('error')
-      setError('No se pudo guardar tu registro. Intenta de nuevo.')
+    } catch {
+      setStatus('idle')
+      setError('Revisa tu conexión a internet e intenta de nuevo.')
     }
   }
 

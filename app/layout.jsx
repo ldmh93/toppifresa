@@ -1,6 +1,11 @@
+import Script from 'next/script'
 import '../styles/globals.css'
 
 const SITE_URL = 'https://toppifresa.vercel.app'
+
+// Sin la variable definida no se carga nada: así en local no se ensucian
+// las métricas de producción con visitas de desarrollo.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
 export const metadata = {
   title: {
@@ -96,6 +101,25 @@ export default function RootLayout({ children }) {
         <div className="app-shell">
           {children}
         </div>
+
+        {/* Google Analytics 4. afterInteractive: carga tras pintar la página,
+            para no retrasar el contenido ni castigar el LCP en móvil. */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   )
