@@ -1,12 +1,12 @@
 {
   "name": "Toppifresa",
   "short_name": "Toppifresa",
-  "description": "Fresas con Crema y Toppings en Acámbaro, Guanajuato",
+  "description": "Tu dosis de felicidad diaria. Fresas con crema y toppings en Acámbaro, Guanajuato.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FFF0F3",
-  "theme_color": "#D63864",
+  "background_color": "#FFF5F5",
+  "theme_color": "#9C0B0A",
   "lang": "es-MX",
   "categories": ["food", "shopping"],
   "icons": [
@@ -68,10 +68,10 @@
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Hacer Pedido",
-      "short_name": "Pedir",
-      "description": "Hacer un pedido por WhatsApp",
-      "url": "/productos",
+      "name": "Ver Promos",
+      "short_name": "Promos",
+      "description": "Combos y ofertas del fin de semana",
+      "url": "/promos",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
