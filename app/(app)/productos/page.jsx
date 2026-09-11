@@ -1,5 +1,5 @@
 import ProductGrid from '@/components/products/ProductGrid'
-import { products } from '@/lib/data/products'
+import { getProductosPublicos } from '@/lib/data/products'
 import { ShoppingBag } from 'lucide-react'
 
 export const metadata = {
@@ -13,7 +13,7 @@ export default function ProductosPage() {
       {/* Header */}
       <div
         className="px-5 pt-14 pb-6"
-        style={{ background: 'linear-gradient(160deg, #D63864 0%, #9B1C40 100%)' }}
+        style={{ background: 'linear-gradient(160deg, #9C0B0A 0%, #6B0306 100%)' }}
       >
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
@@ -21,7 +21,7 @@ export default function ProductosPage() {
           </div>
           <div>
             <h1 className="text-white font-black text-2xl leading-tight">Nuestros Toppis</h1>
-            <p className="text-white/70 text-sm">{products.length} sabores únicos</p>
+            <p className="text-white/70 text-sm">{getProductosPublicos().length} sabores únicos</p>
           </div>
         </div>
       </div>

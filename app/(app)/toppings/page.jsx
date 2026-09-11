@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { toppingCategories } from '@/lib/data/toppings'
-import { products } from '@/lib/data/products'
+import { getCategoriasPublicas, contarToppings } from '@/lib/data/toppings'
+import { getProductosPublicos } from '@/lib/data/products'
 import { Sparkles } from 'lucide-react'
 
 function ToppingChip({ topping, delay }) {
@@ -52,12 +52,14 @@ function ToppingCategory({ category, globalIndex }) {
 }
 
 export default function ToppingsPage() {
+  const categorias = getCategoriasPublicas()
+
   return (
     <div className="pb-4">
       {/* Header */}
       <div
-        className="px-5 pt-14 pb-8 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #A855F7 0%, #7C3AED 100%)' }}
+        className="px-5 pt-14 pb-8 relative overflow-hidden sm:px-8 lg:px-12"
+        style={{ background: 'linear-gradient(160deg, #B5191A 0%, #6B0306 100%)' }}
       >
         <div className="absolute -top-4 -right-4 w-32 h-32 rounded-full bg-white/10" />
         <div className="absolute -bottom-6 left-8 w-20 h-20 rounded-full bg-white/10" />
@@ -75,12 +77,12 @@ export default function ToppingsPage() {
         {/* Stats */}
         <div className="flex gap-3 relative z-10">
           {[
-            { n: toppingCategories.length, label: 'Categorías' },
+            { n: categorias.length, label: 'Categorías' },
             {
-              n: toppingCategories.reduce((acc, c) => acc + c.items.length, 0),
+              n: contarToppings(),
               label: 'Toppings',
             },
-            { n: products.length, label: 'Sabores' },
+            { n: getProductosPublicos().length, label: 'Sabores' },
           ].map((stat) => (
             <div key={stat.label} className="flex-1 bg-white/15 backdrop-blur-sm rounded-2xl p-3 text-center">
               <p className="text-white font-black text-xl">{stat.n}</p>
@@ -92,9 +94,9 @@ export default function ToppingsPage() {
 
       {/* Info banner */}
       <div className="px-5 mt-4 mb-6">
-        <div className="bg-purple-50 border border-purple-200 rounded-2xl p-4 flex gap-3">
+        <div className="bg-primary-50 border border-primary-200 rounded-2xl p-4 flex gap-3">
           <span className="text-xl">⚠️</span>
-          <p className="text-purple-700 text-sm font-medium">
+          <p className="text-primary-900 text-sm font-medium">
             Solo puedes escoger <span className="font-black">2 toppings por producto</span>. Elige tus favoritos y personalízalo por WhatsApp.
           </p>
         </div>
@@ -102,7 +104,7 @@ export default function ToppingsPage() {
 
       {/* Categories */}
       <div className="px-5">
-        {toppingCategories.map((category, i) => (
+        {categorias.map((category, i) => (
           <ToppingCategory key={category.id} category={category} globalIndex={i} />
         ))}
       </div>

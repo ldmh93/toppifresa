@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { useCart } from '@/lib/cart/CartContext'
-import { products } from '@/lib/data/products'
+import { getProductosPublicos, esVendible } from '@/lib/data/products'
 import { getWhatsAppURL } from '@/lib/utils/whatsapp'
 import {
   PEDIDO_MINIMO_DOMICILIO,
@@ -38,7 +38,7 @@ function CartItem({ item }) {
           style={{
             background: item.colors
               ? `linear-gradient(135deg, ${item.colors.from}22, ${item.colors.to}22)`
-              : '#FFF0F3',
+              : '#FFF5F5',
           }}
         >
           {item.emoji}
@@ -114,8 +114,9 @@ function CartItem({ item }) {
 function Recommendations() {
   const { items, addItem, favorites } = useCart()
   const inCart = new Set(items.map((i) => i.id))
-  const recs = products
-    .filter((p) => !inCart.has(p.id))
+  // Solo se recomienda lo que de verdad se puede pedir hoy.
+  const recs = getProductosPublicos()
+    .filter((p) => !inCart.has(p.id) && esVendible(p))
     .sort((a, b) => {
       const favA = favorites.includes(a.id) ? 1 : 0
       const favB = favorites.includes(b.id) ? 1 : 0
@@ -378,7 +379,7 @@ function CheckoutForm({ onBack, onSubmit }) {
                   }`}
                 >
                   Zona Centro
-                  <span className="block text-[10px] font-medium text-app-muted mt-0.5">Envío $25</span>
+                  <span className="block text-[10px] font-medium text-app-muted mt-0.5">Envío ${ENVIO_ZONA_CENTRO}</span>
                 </button>
                 <button
                   onClick={() => set('zona', 'fuera')}
@@ -487,9 +488,9 @@ function CheckoutForm({ onBack, onSubmit }) {
 
       {/* Recordatorio de toppings: va justo encima de Observaciones para que
           "el apartado de observaciones" sea el campo inmediatamente siguiente */}
-      <div className="flex gap-2.5 bg-purple-50 border border-purple-200 rounded-xl px-3 py-2.5">
-        <Sparkles size={15} className="text-purple-500 flex-shrink-0 mt-0.5" />
-        <p className="text-purple-700 text-[11px] leading-relaxed">
+      <div className="flex gap-2.5 bg-primary-50 border border-primary-200 rounded-xl px-3 py-2.5">
+        <Sparkles size={15} className="text-primary flex-shrink-0 mt-0.5" />
+        <p className="text-primary-900 text-[11px] leading-relaxed">
           Cada producto incluye la selección de <strong className="font-bold">2 toppings</strong>.
           Si aún no los has elegido, por favor indícalos en el apartado de observaciones.
         </p>

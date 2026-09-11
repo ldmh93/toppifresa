@@ -7,7 +7,11 @@ import { openWhatsApp, buildPromoMessage } from '@/lib/utils/whatsapp'
 import { Zap, Clock, PiggyBank } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 
-function PromoCard({ promo, index }) {
+// El nivel del título depende de dónde se monte el carrusel: en /promos
+// cuelga del h1 de la página (h2) y en el inicio cuelga del h2 "Promos" (h3).
+// Fijarlo dejaría un hueco en la jerarquía en una de las dos páginas.
+function PromoCard({ promo, index, nivelTitulo = 3 }) {
+  const Titulo = `h${nivelTitulo}`
   const handleCTA = () => {
     openWhatsApp(buildPromoMessage(promo.whatsappMsg))
   }
@@ -44,7 +48,7 @@ function PromoCard({ promo, index }) {
 
         {/* Content */}
         <div className="mt-3">
-          <h3 className="text-white font-black text-xl leading-tight mb-1">{promo.title}</h3>
+          <Titulo className="text-white font-black text-xl leading-tight mb-1">{promo.title}</Titulo>
           <p className="text-white/80 text-sm font-medium mb-1">{promo.subtitle}</p>
           <p className="text-white/60 text-xs leading-relaxed mb-4">{promo.description}</p>
         </div>
@@ -62,7 +66,7 @@ function PromoCard({ promo, index }) {
             className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm"
             style={{
               background: promo.colors.accent || 'rgba(255,255,255,0.2)',
-              color: promo.colors.accent ? '#1C1C1E' : 'white',
+              color: promo.colors.accent ? '#241012' : 'white',
               backdropFilter: 'blur(8px)',
             }}
           >
@@ -75,7 +79,7 @@ function PromoCard({ promo, index }) {
   )
 }
 
-export default function PromoCarousel() {
+export default function PromoCarousel({ nivelTitulo = 3 }) {
   const promos = getActivePromos()
   const scrollRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -120,7 +124,7 @@ export default function PromoCarousel() {
         className="flex gap-4 overflow-x-auto hide-scrollbar px-5 pb-4 snap-x snap-mandatory"
       >
         {promos.map((promo, i) => (
-          <PromoCard key={promo.id} promo={promo} index={i} />
+          <PromoCard key={promo.id} promo={promo} index={i} nivelTitulo={nivelTitulo} />
         ))}
       </div>
 
