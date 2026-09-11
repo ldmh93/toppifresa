@@ -3,10 +3,9 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Home, ShoppingBag, Tag, Sparkles, MapPin, MessageCircle } from 'lucide-react'
+import { Home, ShoppingBag, Tag, Sparkles, MapPin } from 'lucide-react'
 import clsx from 'clsx'
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '524439425620'
 
 const tabs = [
   { href: '/', icon: Home, label: 'Inicio', exact: true },
@@ -21,6 +20,7 @@ function TabItem({ tab, isActive }) {
   return (
     <Link
       href={tab.href}
+      aria-current={isActive ? 'page' : undefined}
       className="flex flex-col items-center justify-center flex-1 py-2 gap-0.5 relative tap-scale"
     >
       {isActive && (
@@ -63,33 +63,23 @@ export default function BottomTabs() {
     return pathname.startsWith(tab.href)
   }
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    'Hola! 👋 Quiero hacer un pedido en Toppifresa 🍓',
-  )}`
-
   return (
+    // Se oculta en escritorio: a partir de lg manda TopNav.
     <nav
-      className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[480px] z-50"
+      aria-label="Navegación principal"
+      className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[var(--content-max)] z-50 lg:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="glass border-t border-app-border shadow-bottom-nav">
         <div className="flex items-stretch">
+          {/* Antes había aquí una sexta pestaña "Pedir" que abría WhatsApp.
+              Se quitó porque duplicaba el botón flotante verde (que además
+              ofrece mensajes rápidos) y ambos quedaban uno encima del otro en
+              la esquina inferior derecha. Al salir, las cinco pestañas
+              restantes ganan ancho y se tocan mejor con el pulgar. */}
           {tabs.map((tab) => (
             <TabItem key={tab.href} tab={tab} isActive={isActive(tab)} />
           ))}
-
-          {/* WhatsApp tab */}
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center flex-1 py-2 gap-0.5 tap-scale"
-          >
-            <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shadow-fab">
-              <MessageCircle size={18} className="text-white" strokeWidth={2.5} fill="white" />
-            </div>
-            <span className="text-[10px] font-medium text-gray-400">Pedir</span>
-          </a>
         </div>
       </div>
     </nav>

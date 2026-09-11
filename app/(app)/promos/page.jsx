@@ -49,7 +49,7 @@ export default function PromosPage() {
       </div>
 
       <div className="mt-4">
-        <PromoCarousel />
+        <PromoCarousel nivelTitulo={2} />
       </div>
 
       <PromoRules />

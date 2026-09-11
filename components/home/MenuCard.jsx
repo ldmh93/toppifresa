@@ -191,7 +191,7 @@ export default function MenuCard({ product, index }) {
               className="overflow-hidden mb-4"
             >
               <div className="flex flex-wrap gap-1.5 pb-1 pt-1">
-                {product.toppings.map((t) => (
+                {product.incluye.map((t) => (
                   <span
                     key={t}
                     className="text-xs bg-primary-50 text-primary px-2.5 py-1 rounded-full font-medium border border-primary/10"
@@ -207,7 +207,8 @@ export default function MenuCard({ product, index }) {
         {/* Note toggle */}
         <button
           onClick={() => setShowNote((v) => !v)}
-          className="flex items-center gap-1.5 text-xs text-app-muted mb-3 tap-scale"
+          aria-expanded={showNote}
+          className="flex items-center gap-1.5 text-xs text-app-muted mb-2 -my-1 py-2 tap-scale"
         >
           <StickyNote size={13} />
           {showNote ? 'Quitar nota' : 'Agregar nota especial'}

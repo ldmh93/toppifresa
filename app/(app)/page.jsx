@@ -1,7 +1,7 @@
 import HeroApp from '@/components/home/HeroApp'
 import MenuSection from '@/components/home/MenuSection'
 import PromoCarousel from '@/components/promos/PromoCarousel'
-import { toppingCategories } from '@/lib/data/toppings'
+import { getCategoriasPublicas } from '@/lib/data/toppings'
 import Link from 'next/link'
 import { ArrowRight, Sparkles, Tag } from 'lucide-react'
 
@@ -12,7 +12,7 @@ export const metadata = {
 }
 
 function ToppingsSneak() {
-  const allToppings = toppingCategories.flatMap((c) => c.items).slice(0, 10)
+  const allToppings = getCategoriasPublicas().flatMap((c) => c.items).slice(0, 10)
   return (
     <section className="mt-8 px-5">
       <div className="flex items-center justify-between mb-3">
@@ -20,7 +20,7 @@ function ToppingsSneak() {
           <h2 className="text-lg font-bold text-app-text">Toppings ✨</h2>
           <p className="text-xs text-app-muted">Lo que ponemos en tus fresas</p>
         </div>
-        <Link href="/toppings" className="flex items-center gap-1 text-primary text-sm font-semibold">
+        <Link href="/toppings" className="flex items-center gap-1 text-primary text-sm font-semibold -my-2 py-2">
           Ver todos <ArrowRight size={16} />
         </Link>
       </div>
@@ -35,7 +35,7 @@ function ToppingsSneak() {
         ))}
         <Link
           href="/toppings"
-          className="inline-flex items-center gap-1 bg-primary-50 border border-primary/20 text-primary px-3 py-1.5 rounded-full text-xs font-bold"
+          className="inline-flex items-center gap-1 bg-primary-50 border border-primary/20 text-primary px-3 py-2 rounded-full text-xs font-bold"
         >
           +más <ArrowRight size={11} />
         </Link>
@@ -59,7 +59,7 @@ export default function HomePage() {
             </h2>
             <p className="text-xs text-app-muted">Ofertas por tiempo limitado</p>
           </div>
-          <Link href="/promos" className="flex items-center gap-1 text-primary text-sm font-semibold">
+          <Link href="/promos" className="flex items-center gap-1 text-primary text-sm font-semibold -my-2 py-2">
             Ver más <ArrowRight size={16} />
           </Link>
         </div>
@@ -70,7 +70,7 @@ export default function HomePage() {
         <Link href="/dinamicas">
           <div
             className="rounded-3xl p-5 relative overflow-hidden tap-scale"
-            style={{ background: 'linear-gradient(135deg, #A855F7, #7C3AED)' }}
+            style={{ background: 'linear-gradient(135deg, #C3201C, #6B0306)' }}
           >
             <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
             <div className="flex items-start justify-between">
@@ -80,7 +80,7 @@ export default function HomePage() {
                   Gana un Toppi<br />gratis 🎁
                 </h3>
                 <p className="text-white/70 text-sm mt-1 mb-4">Regístrate y participa para ganar</p>
-                <div className="inline-flex items-center gap-2 bg-white text-purple-700 font-bold text-sm px-4 py-2 rounded-xl">
+                <div className="inline-flex items-center gap-2 bg-white text-primary-800 font-bold text-sm px-4 py-2 rounded-xl">
                   <Sparkles size={16} /> Participar
                 </div>
               </div>

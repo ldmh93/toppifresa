@@ -19,3 +19,12 @@ npm-debug.log*
 
 # vercel
 .vercel/
+
+# Branding: los binarios pesados (.ai, .pdf, JPG 300ppi) no se versionan.
+# Los SVG sí, y los que usa la app viven optimizados en public/brand/.
+Branding toppifresa/*.ai
+Branding toppifresa/*.pdf
+Branding toppifresa/300ppi/
+
+# Capturas generadas por npm run capturas (artefactos de prueba)
+capturas/

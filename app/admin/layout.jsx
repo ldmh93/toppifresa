@@ -3,14 +3,16 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LayoutDashboard, ShoppingBag, Sparkles,
-  Tag, Users, Settings, ChevronLeft,
+  LayoutDashboard, ShoppingBag, Sparkles, IceCream2,
+  Tag, Tags, Users, Settings, ChevronLeft,
 } from 'lucide-react'
 import clsx from 'clsx'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/productos', label: 'Productos', icon: ShoppingBag },
+  { href: '/admin/categorias', label: 'Categorías', icon: Tags },
+  { href: '/admin/sabores', label: 'Sabores', icon: IceCream2 },
   { href: '/admin/toppings', label: 'Toppings', icon: Sparkles },
   { href: '/admin/promos', label: 'Promos', icon: Tag },
   { href: '/admin/dinamicas', label: 'Clientes', icon: Users },
@@ -27,7 +29,7 @@ export default function AdminLayout({ children }) {
     <div className="min-h-screen bg-gray-50">
       {/* Top bar */}
       <div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
           <Link href="/" className="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center tap-scale">
             <ChevronLeft size={18} className="text-primary" />
           </Link>
@@ -39,7 +41,7 @@ export default function AdminLayout({ children }) {
         </div>
 
         {/* Nav tabs */}
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="flex overflow-x-auto hide-scrollbar border-t border-gray-100">
             {NAV.map((nav) => {
               const Icon = nav.icon
@@ -65,7 +67,7 @@ export default function AdminLayout({ children }) {
       </div>
 
       {/* Page content */}
-      <div className="max-w-2xl mx-auto px-4 py-5">
+      <div className="max-w-5xl mx-auto px-4 py-5">
         {children}
       </div>
     </div>

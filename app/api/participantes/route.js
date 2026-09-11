@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
-import { getSupabase, getSorteoAbierto } from '@/lib/supabase/server'
+import {
+  getSupabase,
+  getSorteoAbierto,
+  esErrorDeConexion,
+  conLimite,
+} from '@/lib/supabase/server'
 
 // Registro público al sorteo. Es el único endpoint abierto a cualquiera,
 // así que valida todo lo que recibe y nunca devuelve datos de otras personas.
@@ -44,9 +49,9 @@ export async function POST(req) {
       )
     }
 
-    const { error } = await db
-      .from('participantes')
-      .insert({ sorteo_id: sorteo.id, nombre, telefono })
+    const { error } = await conLimite(
+      db.from('participantes').insert({ sorteo_id: sorteo.id, nombre, telefono }),
+    )
 
     if (error) {
       // 23505 = violación de índice único => ese número ya participó este mes.
@@ -62,6 +67,17 @@ export async function POST(req) {
     return NextResponse.json({ ok: true, premio: sorteo.premio }, { status: 201 })
   } catch (err) {
     console.error('[participantes] error al registrar:', err)
+
+    // La base no responde (proyecto pausado, sin red, etc.). Es un 503, no un
+    // 500: no es culpa de lo que envió la clienta, y conviene darle una salida
+    // que sí funciona en vez de pedirle que reintente contra algo caído.
+    if (esErrorDeConexion(err)) {
+      return NextResponse.json(
+        { error: 'No podemos registrar tu participación en este momento. Escríbenos por WhatsApp y te anotamos. 🍓' },
+        { status: 503 },
+      )
+    }
+
     return NextResponse.json(
       { error: 'No se pudo guardar tu registro. Intenta de nuevo.' },
       { status: 500 },

@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { products } from '@/lib/data/products'
+import { useMemo, useState } from 'react'
+import { getProductosPublicos, esVendible } from '@/lib/data/products'
 import ProductCard from './ProductCard'
 
 const FILTERS = [
@@ -28,21 +28,35 @@ const filterMap = {
 export default function ProductGrid() {
   const [activeFilter, setActiveFilter] = useState('todos')
 
-  const filtered = products.filter(filterMap[activeFilter] || (() => true))
+  // El catálogo no cambia en el cliente: se resuelve una sola vez.
+  const disponibles = useMemo(() => getProductosPublicos(), [])
+
+  const filtered = useMemo(() => {
+    const fn = filterMap[activeFilter] || (() => true)
+    // Lo agotado se muestra al final: sigue visible, pero no estorba.
+    return disponibles
+      .filter(fn)
+      .sort((a, b) => Number(esVendible(b)) - Number(esVendible(a)))
+  }, [activeFilter, disponibles])
 
   return (
     <div>
-      {/* Filter chips */}
-      <div className="flex gap-2 overflow-x-auto hide-scrollbar px-5 py-4">
+      {/* Filtros */}
+      <div
+        role="group"
+        aria-label="Filtrar el menú por categoría"
+        className="flex gap-2 overflow-x-auto hide-scrollbar px-5 py-4 sm:px-8 lg:flex-wrap lg:overflow-visible lg:px-12"
+      >
         {FILTERS.map((f) => (
           <motion.button
             key={f.id}
             whileTap={{ scale: 0.95 }}
             onClick={() => setActiveFilter(f.id)}
-            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-150 ${
+            aria-pressed={activeFilter === f.id}
+            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold border transition-all duration-150 ${
               activeFilter === f.id
                 ? 'bg-primary text-white border-primary shadow-fab'
-                : 'bg-white text-app-muted border-app-border'
+                : 'bg-white text-app-muted border-app-border hover:border-primary hover:text-primary'
             }`}
           >
             {f.label}
@@ -50,16 +64,19 @@ export default function ProductGrid() {
         ))}
       </div>
 
-      {/* Results count */}
-      <div className="px-5 mb-3">
-        <p className="text-xs text-app-muted">
+      {/* Conteo. aria-live avisa al lector de pantalla cuando cambia el filtro. */}
+      <div className="px-5 mb-3 sm:px-8 lg:px-12">
+        <p className="text-xs text-app-muted" aria-live="polite">
           {filtered.length} {filtered.length === 1 ? 'producto' : 'productos'}
         </p>
       </div>
 
-      {/* Grid */}
-      <div className="px-5 flex flex-col gap-4">
-        <motion.div layout className="grid grid-cols-1 gap-4">
+      {/* Rejilla: 1 columna en móvil, 2 en tablet, 3 en pantallas grandes */}
+      <div className="px-5 sm:px-8 lg:px-12">
+        <motion.div
+          layout
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        >
           {filtered.map((product, i) => (
             <motion.div
               key={product.id}
@@ -67,7 +84,7 @@ export default function ProductGrid() {
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ delay: i * 0.04 }}
+              transition={{ delay: Math.min(i * 0.04, 0.24) }}
             >
               <ProductCard product={product} />
             </motion.div>

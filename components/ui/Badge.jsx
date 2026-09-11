@@ -10,7 +10,7 @@ const styles = {
   mexicano: 'bg-green-100 text-green-700 border border-green-200',
   picante: 'bg-orange-100 text-orange-700 border border-orange-200',
   saludable: 'bg-teal-100 text-teal-700 border border-teal-200',
-  viral: 'bg-purple-100 text-purple-700 border border-purple-200',
+  viral: 'bg-pink-100 text-primary-800 border border-pink-300',
   premium: 'bg-yellow-100 text-yellow-700 border border-yellow-200',
 }
 

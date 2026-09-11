@@ -15,7 +15,8 @@ export default function DevCredit() {
               href="https://wa.me/524171279042"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 decoration-app-border hover:text-app-muted transition-colors"
+              aria-label="WhatsApp del desarrollador: 417 127 9042"
+              className="inline-block py-2 underline underline-offset-2 decoration-app-border hover:text-app-muted transition-colors"
             >
               417 127 9042
             </a>

@@ -2,17 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================
+   Tokens — espejo de tailwind.config.js para CSS suelto.
+   Colores tomados del branding oficial (SVG de la marca).
+   ========================================================= */
 :root {
-  --primary: #D63864;
-  --primary-light: #FF6B8A;
-  --primary-dark: #B02952;
-  --bg: #FFF0F3;
+  --primary: #9c0b0a; /* rojo del logotipo — 8.52:1 sobre blanco */
+  --primary-600: #b5191a;
+  --primary-900: #6b0306;
+  --rose: #e2787d;
+  --pink: #ff7bac;
+  --gold: #f8b520;
+  --leaf: #2a843f;
+
+  --bg: #fff5f5;
   --card: #ffffff;
-  --text: #1C1C1E;
-  --text-muted: #8E8E93;
-  --border: #F2E4E8;
-  --bottom-nav-height: 80px;
+  --text: #241012;
+  --text-muted: #7c6668;
+  --border: #f4e2e2;
+
+  --bottom-nav-height: 76px;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Ancho del contenido. Sube en tablet/escritorio (ver más abajo). */
+  --content-max: 100%;
 }
 
 * {
@@ -52,28 +65,65 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior-y: none;
   min-height: 100dvh;
 }
 
-/* App shell */
+/* =========================================================
+   App shell
+   Móvil: ocupa toda la pantalla (mobile-first de verdad).
+   Escritorio: el contenido se ensancha y alrededor aparece el
+   patrón de fresas de la marca, en vez de una franja vacía.
+   ========================================================= */
 .app-shell {
-  max-width: 480px;
+  width: 100%;
+  max-width: var(--content-max);
   margin: 0 auto;
   min-height: 100dvh;
   position: relative;
-  background-color: var(--bg);
+  background-color: var(--card);
 }
 
-/* Page content with bottom nav spacing */
+@media (min-width: 768px) {
+  :root {
+    --content-max: 720px;
+  }
+  .app-shell {
+    box-shadow: 0 0 60px rgba(156, 11, 10, 0.08);
+  }
+  body {
+    background-color: var(--bg);
+    background-image: url('/brand/pattern-soft.svg');
+    background-size: 340px auto;
+    background-attachment: fixed;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --content-max: 1100px;
+    --bottom-nav-height: 0px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --content-max: 1280px;
+  }
+}
+
+/* Espacio inferior para que la barra de tabs no tape contenido.
+   En escritorio la barra desaparece y el espacio se reduce. */
 .page-content {
-  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom) + 16px);
+  padding-bottom: calc(
+    var(--bottom-nav-height) + var(--safe-area-bottom) + 16px
+  );
 }
 
-/* Hide scrollbar but keep scroll */
+/* Ocultar scrollbar conservando el scroll */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -82,26 +132,26 @@ body {
   display: none;
 }
 
-/* Gradient text */
+/* Texto con degradado de marca */
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: linear-gradient(135deg, var(--primary), var(--primary-600));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Glass effect */
+/* Efecto cristal */
 .glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-/* Card base */
+/* Tarjeta base */
 .card-base {
   background: white;
   border-radius: 20px;
-  box-shadow: 0 2px 20px rgba(214, 56, 100, 0.08);
+  box-shadow: 0 2px 16px rgba(156, 11, 10, 0.07);
   overflow: hidden;
   transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
@@ -109,12 +159,12 @@ body {
 /* Elevación al pasar el mouse (solo dispositivos con cursor) */
 @media (hover: hover) {
   .card-base:hover {
-    box-shadow: 0 8px 40px rgba(214, 56, 100, 0.16);
+    box-shadow: 0 10px 40px rgba(156, 11, 10, 0.14);
     transform: translateY(-2px);
   }
 }
 
-/* Tap animation */
+/* Animación al tocar */
 .tap-scale {
   transition: transform 0.1s ease;
   -webkit-tap-highlight-color: transparent;
@@ -123,65 +173,43 @@ body {
   transform: scale(0.97);
 }
 
-/* Story ring */
-.story-ring {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light), #FFB347);
-  padding: 2.5px;
-  border-radius: 50%;
-}
-
-/* Bottom safe area */
+/* Área segura inferior */
 .pb-safe {
   padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
 }
 
-/* Shimmer skeleton */
+/* Esqueleto de carga */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    #f0e8eb 25%,
-    #ffd6df 50%,
-    #f0e8eb 75%
-  );
+  background: linear-gradient(90deg, #f7eaea 25%, #fbe0df 50%, #f7eaea 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
 }
 
-/* Urgency badge pulse */
+/* Badge de urgencia */
 .badge-urgency {
   animation: pulse_soft 2s ease-in-out infinite;
 }
 
-/* Custom scrollbar for webkit on desktop */
-@media (min-width: 768px) {
-  .app-shell::-webkit-scrollbar {
-    width: 4px;
-  }
-  .app-shell::-webkit-scrollbar-thumb {
-    background: var(--primary-light);
-    border-radius: 4px;
-  }
+/* Patrón de fresas de la marca, como fondo de sección */
+.brand-pattern {
+  background-image: url('/brand/pattern-strawberries.svg');
+  background-size: 300px auto;
+  background-repeat: repeat;
 }
 
-/* PWA standalone mode adjustments */
+/* Modo PWA instalada */
 @media (display-mode: standalone) {
   body {
     user-select: none;
   }
 }
 
-/* Story circles */
-@keyframes story-progress {
-  from { stroke-dashoffset: 126; }
-  to { stroke-dashoffset: 0; }
-}
-
-/* Gradient overlays for product cards */
+/* Degradado sobre las fotos de producto */
 .product-card-overlay {
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.2) 50%,
+    rgba(36, 16, 18, 0.72) 0%,
+    rgba(36, 16, 18, 0.2) 50%,
     transparent 100%
   );
 }
@@ -190,7 +218,48 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-  .border-gradient {
-    border-image: linear-gradient(135deg, var(--primary), var(--primary-light)) 1;
+  /* Oculta un elemento salvo para lectores de pantalla */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* =========================================================
+   Botón flotante de WhatsApp
+   La posición se resuelve en CSS (no en JS) para que respete el
+   ancho del contenido y la barra inferior en cada breakpoint.
+   ========================================================= */
+.fab-wa,
+.fab-wa-panel {
+  right: max(1rem, calc((100% - var(--content-max)) / 2 + 1rem));
+}
+.fab-wa {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--bottom-nav-height) + 12px);
+}
+.fab-wa-panel {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--bottom-nav-height) + 72px);
+}
+/* Sube para no encimarse con la barra del carrito */
+.fab-wa[data-cart-visible='true'] {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--bottom-nav-height) + 72px);
+}
+.fab-wa-panel[data-cart-visible='true'] {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--bottom-nav-height) + 132px);
+}
+/* En escritorio no hay barra de carrito abajo, así que el botón no sube. */
+@media (min-width: 1024px) {
+  .fab-wa[data-cart-visible='true'] {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+  .fab-wa-panel[data-cart-visible='true'] {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
   }
 }

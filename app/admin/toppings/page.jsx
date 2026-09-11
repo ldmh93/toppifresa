@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Pencil, Trash2, X, Check, ChevronDown } from 'lucide-react'
-import { toppingCategories as staticCats } from '@/lib/data/toppings'
+import { toppingCategories as publicados } from '@/lib/data/toppings'
+import { useBorrador } from '@/lib/admin/borrador'
+import BarraPublicar from '@/components/admin/BarraPublicar'
 
-const CATEGORY_COLORS = ['#D63864','#A855F7','#F5B731','#25D366','#3B82F6','#F97316','#EC4899','#14B8A6']
+const CATEGORY_COLORS = ['#9C0B0A','#E2787D','#FF7BAC','#F8B520','#EB6348','#2A843F','#C68A4E','#C3201C']
 
 function ItemRow({ item, onEdit, onDelete }) {
   return (
@@ -171,32 +173,40 @@ function CategoryCard({ category, onChange, onDelete }) {
 }
 
 export default function AdminToppings() {
-  const [categories, setCategories] = useState(staticCats)
+  const [categories, setCategories, { hidratado, hayBorrador, descartar }] = useBorrador(
+    'toppings',
+    publicados,
+  )
   const [addingCat, setAddingCat] = useState(false)
   const [newCat, setNewCat] = useState({ name: '', emoji: '✨', color: CATEGORY_COLORS[0], items: [] })
 
   const updateCategory = (id, data) => {
-    setCategories((prev) => prev.map((c) => (c.id === id ? data : c)))
+    setCategories(categories.map((c) => (c.id === id ? data : c)))
   }
 
   const deleteCategory = (id) => {
     if (confirm('¿Eliminar esta categoría?')) {
-      setCategories((prev) => prev.filter((c) => c.id !== id))
+      setCategories(categories.filter((c) => c.id !== id))
     }
   }
 
   const createCategory = () => {
     if (!newCat.name.trim()) return
-    setCategories((prev) => [...prev, { ...newCat, id: `cat-${Date.now()}` }])
+    setCategories([
+      ...categories,
+      { ...newCat, id: `cat-${Date.now()}`, activo: true, orden: categories.length + 1 },
+    ])
     setNewCat({ name: '', emoji: '✨', color: CATEGORY_COLORS[0], items: [] })
     setAddingCat(false)
   }
+
+  if (!hidratado) return <div className="h-40 animate-pulse rounded-2xl bg-white/60" />
 
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl font-black text-app-text">Toppings ✨</h1>
+          <h1 className="font-display text-xl font-black text-app-text">Toppings ✨</h1>
           <p className="text-app-muted text-xs">{categories.length} categorías · {categories.reduce((a, c) => a + c.items.length, 0)} ingredientes</p>
         </div>
         <motion.button
@@ -249,9 +259,12 @@ export default function AdminToppings() {
         />
       ))}
 
-      <p className="text-center text-xs text-app-muted mt-4 px-4">
-        💡 Conecta Firebase en <code>.env.local</code> para guardar cambios permanentemente.
-      </p>
+      <BarraPublicar
+        nombreExport="toppingCategories"
+        datos={categories}
+        hayBorrador={hayBorrador}
+        onDescartar={descartar}
+      />
     </div>
   )
 }

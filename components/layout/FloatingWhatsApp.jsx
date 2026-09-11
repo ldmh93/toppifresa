@@ -17,10 +17,10 @@ const quickMessages = [
 export default function FloatingWhatsApp() {
   const [open, setOpen] = useState(false)
   const cart = useCart()
-  // Sube el botón cuando la barra del carrito está visible para no encimarse
-  const cartBarVisible = cart?.hydrated && cart.itemCount > 0 && !cart.drawerOpen
-  const fabBottom = cartBarVisible ? 148 : 88
-  const panelBottom = cartBarVisible ? 208 : 148
+  // Sube el botón cuando la barra del carrito está visible para no encimarse.
+  // El desplazamiento exacto lo resuelve el CSS (.fab-wa en globals.css), que
+  // además conoce la altura de la barra inferior en cada breakpoint.
+  const cartBarVisible = Boolean(cart?.hydrated && cart.itemCount > 0 && !cart.drawerOpen)
 
   const sendMessage = (text) => {
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`
@@ -51,11 +51,8 @@ export default function FloatingWhatsApp() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="fixed z-50 flex flex-col gap-2 max-w-[240px]"
-            style={{
-              bottom: `calc(env(safe-area-inset-bottom, 0px) + ${panelBottom}px)`,
-              right: 'max(1rem, calc(50% - 224px))',
-            }}
+            className="fab-wa-panel fixed z-50 flex flex-col gap-2 max-w-[240px]"
+            data-cart-visible={cartBarVisible ? 'true' : 'false'}
           >
             <div className="bg-white rounded-2xl shadow-card-hover p-3 mb-2">
               <p className="text-xs font-semibold text-app-muted mb-2">Mensajes rápidos</p>
@@ -83,12 +80,9 @@ export default function FloatingWhatsApp() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? 'Cerrar mensajes rápidos' : 'Abrir mensajes rápidos de WhatsApp'}
         aria-expanded={open}
-        className="fixed z-50 w-14 h-14 rounded-full shadow-fab tap-scale flex items-center justify-center"
-        style={{
-          bottom: `calc(env(safe-area-inset-bottom, 0px) + ${fabBottom}px)`,
-          right: 'max(1rem, calc(50% - 224px))',
-          background: open ? '#1C1C1E' : '#25D366',
-        }}
+        className="fab-wa fixed z-50 w-14 h-14 rounded-full shadow-fab tap-scale flex items-center justify-center"
+        data-cart-visible={cartBarVisible ? 'true' : 'false'}
+        style={{ background: open ? '#241012' : '#25D366' }}
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         whileTap={{ scale: 0.92 }}
