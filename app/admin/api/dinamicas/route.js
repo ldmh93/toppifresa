@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabase/server'
+import { getSupabase, esErrorDeConexion, conLimite } from '@/lib/supabase/server'
 
 // API del panel de dinámicas.
 //
@@ -22,10 +22,9 @@ export async function GET(req) {
   if (!db) return SIN_CONFIG
 
   try {
-    const { data: sorteos, error: e1 } = await db
-      .from('sorteos')
-      .select(CAMPOS_SORTEO)
-      .order('created_at', { ascending: false })
+    const { data: sorteos, error: e1 } = await conLimite(
+      db.from('sorteos').select(CAMPOS_SORTEO).order('created_at', { ascending: false }),
+    )
     if (e1) throw e1
 
     // Por defecto se muestra el abierto; si no hay, el más reciente.
@@ -38,11 +37,13 @@ export async function GET(req) {
 
     let participantes = []
     if (sorteo) {
-      const { data, error: e2 } = await db
-        .from('participantes')
-        .select('id, nombre, telefono, created_at')
-        .eq('sorteo_id', sorteo.id)
-        .order('created_at', { ascending: false })
+      const { data, error: e2 } = await conLimite(
+        db
+          .from('participantes')
+          .select('id, nombre, telefono, created_at')
+          .eq('sorteo_id', sorteo.id)
+          .order('created_at', { ascending: false }),
+      )
       if (e2) throw e2
       participantes = data
     }
@@ -54,6 +55,12 @@ export async function GET(req) {
     return NextResponse.json({ sorteos, sorteo, participantes, ganador })
   } catch (err) {
     console.error('[admin/dinamicas] GET:', err)
+    if (esErrorDeConexion(err)) {
+      return NextResponse.json(
+        { error: 'No se pudo conectar con Supabase. Revisa que el proyecto esté activo (los del plan gratuito se pausan solos tras unos días sin uso).' },
+        { status: 503 },
+      )
+    }
     return NextResponse.json({ error: 'No se pudieron cargar los datos.' }, { status: 500 })
   }
 }
@@ -80,15 +87,17 @@ export async function POST(req) {
         return NextResponse.json({ error: 'Escribe el premio del sorteo.' }, { status: 400 })
       }
 
-      const { data, error } = await db
-        .from('sorteos')
-        .insert({
-          premio,
-          descripcion: String(body.descripcion ?? '').trim().slice(0, 200) || null,
-          cierra_en: body.cierra_en || null,
-        })
-        .select(CAMPOS_SORTEO)
-        .single()
+      const { data, error } = await conLimite(
+        db
+          .from('sorteos')
+          .insert({
+            premio,
+            descripcion: String(body.descripcion ?? '').trim().slice(0, 200) || null,
+            cierra_en: body.cierra_en || null,
+          })
+          .select(CAMPOS_SORTEO)
+          .single(),
+      )
 
       if (error) {
         // Lo impone el índice sorteos_un_solo_abierto.
@@ -109,10 +118,9 @@ export async function POST(req) {
 
     // ---- Elegir ganador ---------------------------------------------
     if (accion === 'sortear') {
-      const { data: participantes, error: e1 } = await db
-        .from('participantes')
-        .select('id, nombre, telefono')
-        .eq('sorteo_id', sorteoId)
+      const { data: participantes, error: e1 } = await conLimite(
+        db.from('participantes').select('id, nombre, telefono').eq('sorteo_id', sorteoId),
+      )
       if (e1) throw e1
 
       if (!participantes.length) {
@@ -126,10 +134,12 @@ export async function POST(req) {
 
       // Queda guardado en la base: aunque cierres la página o se vaya la luz,
       // el ganador y la fecha del sorteo no se pierden.
-      const { error: e2 } = await db
-        .from('sorteos')
-        .update({ ganador_id: ganador.id, sorteado_en: new Date().toISOString() })
-        .eq('id', sorteoId)
+      const { error: e2 } = await conLimite(
+        db
+          .from('sorteos')
+          .update({ ganador_id: ganador.id, sorteado_en: new Date().toISOString() })
+          .eq('id', sorteoId),
+      )
       if (e2) throw e2
 
       return NextResponse.json({ ok: true, ganador })
@@ -137,10 +147,9 @@ export async function POST(req) {
 
     // ---- Cerrar el mes ----------------------------------------------
     if (accion === 'cerrar') {
-      const { error } = await db
-        .from('sorteos')
-        .update({ estado: 'cerrado' })
-        .eq('id', sorteoId)
+      const { error } = await conLimite(
+        db.from('sorteos').update({ estado: 'cerrado' }).eq('id', sorteoId),
+      )
       if (error) throw error
 
       return NextResponse.json({ ok: true })
@@ -149,6 +158,12 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Acción desconocida.' }, { status: 400 })
   } catch (err) {
     console.error('[admin/dinamicas] POST:', err)
+    if (esErrorDeConexion(err)) {
+      return NextResponse.json(
+        { error: 'No se pudo conectar con Supabase. Revisa que el proyecto esté activo.' },
+        { status: 503 },
+      )
+    }
     return NextResponse.json({ error: 'No se pudo completar la acción.' }, { status: 500 })
   }
 }

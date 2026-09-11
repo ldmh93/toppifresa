@@ -3,13 +3,15 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Pencil, Trash2, X, Check, ToggleLeft, ToggleRight } from 'lucide-react'
-import { promos as staticPromos } from '@/lib/data/promos'
+import { promos as publicados } from '@/lib/data/promos'
+import { useBorrador } from '@/lib/admin/borrador'
+import BarraPublicar from '@/components/admin/BarraPublicar'
 
 const EMPTY_PROMO = {
   title: '', subtitle: '', description: '', tag: 'HOY',
   urgency: '', cta: 'Aprovechar ahora', emoji: '🎉',
   whatsappMsg: '', active: true,
-  colors: { from: '#D63864', to: '#9B1C40', accent: '#FFD700' },
+  colors: { from: '#9C0B0A', to: '#6B0306', accent: '#F8B520' },
 }
 
 const TAGS = ['HOY', 'FIN DE SEMANA', 'ESPECIAL', 'NUEVO', 'ENTREGA']
@@ -150,25 +152,30 @@ function PromoItem({ promo, onEdit, onDelete, onToggle }) {
 }
 
 export default function AdminPromos() {
-  const [items, setItems] = useState(staticPromos)
+  const [items, setItems, { hidratado, hayBorrador, descartar }] = useBorrador(
+    'promos',
+    publicados,
+  )
   const [editing, setEditing] = useState(null)
   const [creating, setCreating] = useState(false)
 
   const handleSave = (form) => {
     if (editing) {
-      setItems((prev) => prev.map((p) => (p.id === editing.id ? { ...p, ...form } : p)))
+      setItems(items.map((p) => (p.id === editing.id ? { ...p, ...form } : p)))
       setEditing(null)
     } else {
-      setItems((prev) => [...prev, { ...form, id: `promo-${Date.now()}` }])
+      setItems([...items, { ...form, id: `promo-${Date.now()}` }])
       setCreating(false)
     }
   }
+
+  if (!hidratado) return <div className="h-40 animate-pulse rounded-2xl bg-white/60" />
 
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-xl font-black text-app-text">Promos 🎉</h1>
+          <h1 className="font-display text-xl font-black text-app-text">Promos 🎉</h1>
           <p className="text-app-muted text-xs">{items.filter((p) => p.active).length} activas · {items.length} total</p>
         </div>
         <motion.button whileTap={{ scale: 0.95 }}
@@ -188,12 +195,19 @@ export default function AdminPromos() {
           {items.map((p) => (
             <PromoItem key={p.id} promo={p}
               onEdit={(promo) => { setEditing(promo); setCreating(false) }}
-              onDelete={(id) => setItems((prev) => prev.filter((x) => x.id !== id))}
-              onToggle={(id) => setItems((prev) => prev.map((x) => x.id === id ? { ...x, active: !x.active } : x))}
+              onDelete={(id) => setItems(items.filter((x) => x.id !== id))}
+              onToggle={(id) => setItems(items.map((x) => (x.id === id ? { ...x, active: !x.active } : x)))}
             />
           ))}
         </AnimatePresence>
       </div>
+
+      <BarraPublicar
+        nombreExport="promos"
+        datos={items}
+        hayBorrador={hayBorrador}
+        onDescartar={descartar}
+      />
     </div>
   )
 }
