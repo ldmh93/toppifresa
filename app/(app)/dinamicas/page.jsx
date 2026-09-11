@@ -7,9 +7,15 @@ export const metadata = {
   description: 'Participa en las dinámicas de Toppifresa y gana premios.',
 }
 
-// El premio se lee en cada visita, no en el build: al abrir un sorteo nuevo
-// desde /admin la página se actualiza sola, sin volver a publicar el sitio.
-export const dynamic = 'force-dynamic'
+// El premio se lee de Supabase y se cachea un minuto.
+//
+// Antes era `force-dynamic`: cada visita consultaba la base. Con la base sana
+// eso son unos 200 ms por visita para un dato que cambia una vez al mes; con
+// la base caída eran 8 segundos de espera para CADA persona que abría la
+// página. Con revalidate, solo la primera visita de cada minuto paga la
+// consulta y las demás reciben el HTML ya generado. Un sorteo nuevo aparece
+// como mucho un minuto después, sin volver a publicar el sitio.
+export const revalidate = 60
 
 // Si Supabase aún no responde, se muestra este premio para no dejar la
 // página rota ni vacía.
@@ -43,7 +49,7 @@ export default async function DinamicasPage() {
       {/* Hero */}
       <div
         className="px-5 pt-14 pb-8 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #A855F7 0%, #4F0D6E 100%)' }}
+        style={{ background: 'linear-gradient(160deg, #B5191A 0%, #4F0D6E 100%)' }}
       >
         <div className="absolute -top-6 -right-6 w-36 h-36 rounded-full bg-white/10" />
         <div className="absolute bottom-0 -left-8 w-28 h-28 rounded-full bg-white/10" />
